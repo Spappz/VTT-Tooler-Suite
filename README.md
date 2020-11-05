@@ -23,7 +23,7 @@ This script doesn't handle and will likely break with the following:
 - basically anything that isn't formatted remotely like WotC
 - 'special' type HPs (i.e. flat numbers without dice roll)
 - creatures with extra forms, specifically that alter AC or speed (e.g. werewolf|MM)
-- alignments that aren't either exact or in the form of 'any (non-)<alignment>'
+- alignments that aren't either exact or in the form of 'any (non-)*alignment*'
 - `prefix` tags (e.g. '**Illuskan** human')
 - swarms of nonstandard-type creatures (e.g. 'Medium swarm of Tiny **aliens**')
 - spell attack actions; all attack actions are presumed weapon attacks
