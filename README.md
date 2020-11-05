@@ -1,12 +1,5 @@
 # R20 Monster Tooler
 
-### Settings
-- `$source` (string) sets the JSON source
-- `$token` (bool) to add a `tokenUrl` (pointing to `$repo/$source/creature/token/<name>.png`)
-- `$fluff` (bool) to extract fluff entries from each monster's `bio.html`
-- `$image` (bool) to add a fluff image (pointing to `$repo/$source/creature/<name>.webp`)
-- `$repo` (string) is used for the first part of the above URLs
-
 ### About
 This script converts monsters from [Kakaroto's R20Exporter](https://github.com/kakaroto/R20Exporter/) JSON to [5etools' homebrew](https://github.com/TheGiddyLimit/homebrew) schema. This script is designed to automate the *bulk* process, and it will almost certainly require manual correction afterwards (see below).
 
@@ -16,6 +9,14 @@ Place this file in the same directory as the 'characters' directory, which you s
 A file named `# CONVERTED.json` will be created in this same directory. Make corrections as appropriate and you should be sorted!
 
 Knowledge of the [5etools' schema](https://github.com/TheGiddyLimit/TheGiddyLimit.github.io/tree/master/test/schema) is strongly advised. Proficiency in basic regex is very helpful for clean-up!
+
+### Settings
+The following settings can (and should) be set by editing the script. They're found at the top.
+- `$source` (string) sets the JSON source
+- `$token` (bool) to add a `tokenUrl` (pointing to `$repo/$source/creature/token/<name>.png`)
+- `$fluff` (bool) to extract fluff entries from each monster's `bio.html`
+- `$image` (bool) to add a fluff image (pointing to `$repo/$source/creature/<name>.webp`)
+- `$repo` (string) is used for the first part of the above URLs
 
 ### Limitations
 This script doesn't handle and will likely break with the following:
