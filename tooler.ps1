@@ -23,10 +23,10 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
    Place this file in the same directory as the 'characters' directory, which you should
     acquire by running R20Exporter. On Windows, right-click this script and select 'Run'.
     On Mac OS and Linux, you will probably have to install Powershell and run it via
-    command line. See Microsoft's website for more information.
+    command line.
 
    A file named '# CONVERTED.json' will be created in this same directory. Make
-    corrections as appropriate and add a `_meta` header and you should be sorted!
+    corrections as appropriate and you should be sorted!
 
    Knowledge of the 5etools' schema is strongly advised. Proficiency in basic regex is
     very helpful for clean-up!
@@ -41,7 +41,7 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
    - 'special' type HPs (i.e. flat numbers without dice roll)
    - creatures with extra forms, specifically that alter AC or speed (e.g. werewolf|MM)
    - alignments that aren't either exact or in the form of 'any (non-)<alignment>'
-   - `prefix` tags (e.g. the 'Illuskan' in 'Illuskan human')
+   - `prefix` tags (e.g. 'Illuskan human')
    - swarms of nonstandard-type creatures (e.g. 'Medium swarm of Tiny aliens')
    - spell attack actions; all attack actions are presumed weapon attacks
 
@@ -70,8 +70,8 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
    everywhere, it's likely meant to be one of those.
 
 # CONTACT
-  - spap#9812
-  - spappz at firemail dot cc
+  - spap [hash] 9812
+  - spappz [at] firemail [dot] cc
 
   pls no spam
 
