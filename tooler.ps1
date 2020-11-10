@@ -864,9 +864,6 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
         if ($5et.languages -match "\bcan't speak\b") { $5et.languageTags += "CS" }
         if ($5et.languages -match '\bin life\b') { $5et.languageTags += "LF" }
         if ($5et.languages -match '((^(any|plus|pick|choose) )|((other|extra|additional|more) lang)| (choice|choosing))') { $5et.languageTags += "X" }
-        if ($5et.languageTags.Count -eq 0) {
-            $5et.PSObject.Properties.Remove('languageTags')
-        }
     }
 
     # CR
@@ -1169,9 +1166,6 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     switch -regex ($5et.reaction.name) {
         "^Parry" { $5et.actionTags += "Parry" }
     }
-    if ($5et.actionTags.Count -eq 0) {
-        $5et.PSObject.Properties.Remove('actionTags')
-    }
 
     # LEGENDARY ACIONS
     Write-Progress -Activity $name -Status "Frightening..." -PercentComplete 75 -Id 1 -ParentId 0
@@ -1196,6 +1190,17 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
             $5et.damageInflict += $atk | Find-Damage-Types
             # CONDITION INFLICT TAGS
             $5et.conditionInflictLegendary += $atk | Find-Conditions
+				# TAG ACTIONS
+				switch -regex ($5et.legendary.name) {
+                "^Multiattack" { $5et.actionTags += "Multiattack" }
+                "^Frightful Presence" { $5et.actionTags += "Frightful Presence" }
+                "^Teleport" { $5et.actionTags += "Teleport" }
+                "^Swallow" { $5et.actionTags += "Swallow" }
+                "^Tentacle" { $5et.actionTags += "Tentacles" }
+				}
+				if ($5et.action.entries -match '\bswallowed\b') {
+                $5et.actionTags += "Swallow"
+				}
         }
     }
 
@@ -1434,6 +1439,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     Clean-Up-Tags $5et "senseTags"
     Clean-Up-Tags $5et "damageInflict"
     Clean-Up-Tags $5et "conditionInflict"
+    Clean-Up-Tags $5et "languageTags"
     Clean-Up-Tags $5et "spellcastingTags"
     Clean-Up-Tags $5et "conditionInflictSpell"
     Clean-Up-Tags $5et "actionTags"
