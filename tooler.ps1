@@ -918,8 +918,8 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
             "^fey ancestry" { $5et.traitTags += "Fey Ancestry" }
             "^siege monster" { $5et.traitTags += "Siege Monster" }
             "^pack tactics" { $5et.traitTags += "Pack Tactics" }
-            "^regeneration" { $5et.traitTags += "Regeneration" }
-            "^shapechanger" { $5et.traitTags += "Shapechanger" }
+            "^regenerat" { $5et.traitTags += "Regeneration" }
+            "^shapechange" { $5et.traitTags += "Shapechanger" }
             "^false appearance" { $5et.traitTags += "False Appearance" }
             "^spider climb" { $5et.traitTags += "Spider Climb" }
             "^sunlight (hyper)?sensitivity" { $5et.traitTags += "Sunlight Sensitivity" }
@@ -932,7 +932,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
             "^ambush" { $5et.traitTags += "Ambusher" }
             "^amorphous" { $5et.traitTags += "Amorphous" }
             "^death (burst|throes)" { $5et.traitTags += "Death Burst" }
-            "^devil('s)? sight" { $5et.traitTags += "Devil's Sight" }
+            "^devil'?s? sight" { $5et.traitTags += "Devil's Sight" }
             "^immutable form" { $5et.traitTags += "Immutable Form" }
         }
     if ($5et.traitTags.Count -eq 0) {
