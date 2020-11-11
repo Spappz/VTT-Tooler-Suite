@@ -602,15 +602,15 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
                 -NotePropertyName "animal handling" `
                 -NotePropertyValue ("+" + ($r20.attributes | where { $_.name -eq "npc_animal_handling" } | Select -ExpandProperty current))
         }
-        if (($r20.attributes | where { $_.name -eq "npc_athletics" } | Select -ExpandProperty current) -ne "") {
-            $skills | Add-Member `
-                -NotePropertyName "athletics" `
-                -NotePropertyValue ("+" + ($r20.attributes | where { $_.name -eq "npc_athletics" } | Select -ExpandProperty current))
-        }
         if (($r20.attributes | where { $_.name -eq "npc_arcana" } | Select -ExpandProperty current) -ne "") {
             $skills | Add-Member `
                 -NotePropertyName "arcana" `
                 -NotePropertyValue ("+" + ($r20.attributes | where { $_.name -eq "npc_arcana" } | Select -ExpandProperty current))
+        }
+        if (($r20.attributes | where { $_.name -eq "npc_athletics" } | Select -ExpandProperty current) -ne "") {
+            $skills | Add-Member `
+                -NotePropertyName "athletics" `
+                -NotePropertyValue ("+" + ($r20.attributes | where { $_.name -eq "npc_athletics" } | Select -ExpandProperty current))
         }
         if (($r20.attributes | where { $_.name -eq "npc_deception" } | Select -ExpandProperty current) -ne "") {
             $skills | Add-Member `
@@ -1043,7 +1043,11 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
                     $atk = "XxX_ERROR_XxX : Ranged duplicate ///"
                     $err = $true
                 }
-                '^.+ \((swarm has )?half HP or less\)$' {
+					 '^.+ \(two\-handed\)$' {
+                    $atk = "XxX_ERROR_XxX : Versatile duplicate ///"
+                    $err = $true
+                }
+                '^.+ \(swarm has .*less.*\)$' {
                     $atk = "XxX_ERROR_XxX : Swarm HP-dependent duplicate ///"
                     $err = $true
                 }
@@ -1218,8 +1222,9 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
         '\b(sphere|line|cone|cube)\b' { $5et.miscTags += "AOE" }
         '\b(each (target|creature)|(targets|creatures)) (with)?in (a )?\d+( |-)f(oo|ee)?t\b' { $5et.miscTags += "AOE" }
     }
-    if ($5et.action.name -match '\b((short|long|cross)bow|sling|dart|net|(shot|blow)gun|rifle|pistol|musket|revolver)\b') {
-        $5et.miscTags += "RNG"
+    switch -regex ($5et.action.name) {
+		 '\b((short|long|cross)bow|sling|dart|net|(shot|blow)gun|rifle|pistol|musket|revolver)\b' { $5et.miscTags += "RNG" }
+		 '\(Ranged\)$' { $5et.miscTags += "THW" }
     }
 
     # TOKEN
