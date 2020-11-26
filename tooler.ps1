@@ -20,16 +20,16 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
    certainly require manual correction afterwards (see below).
 
 # HOW TO USE
-   Place this file in the same directory as the 'characters' directory, which you should
-    acquire by running R20Exporter. On Windows, right-click this script and select 'Run'.
-    On Mac OS and Linux, you will probably have to install Powershell and run it via
-    command line.
+  Place this file in the same directory as the 'characters' directory, which you should
+   acquire by running R20Exporter. On Windows, right-click this script and select 'Run'.
+   On Mac OS and Linux, you will probably have to install Powershell and run it via
+   command line.
 
-   A file named '# CONVERTED.json' will be created in this same directory. Make
-    corrections as appropriate and you should be sorted!
+  A file named '# BREW.json' will be created in this same directory. Make corrections as
+   appropriate and you should be sorted!
 
-   Knowledge of the 5etools' schema is strongly advised. Proficiency in basic regex is
-    very helpful for clean-up!
+  Knowledge of the 5etools' schema is strongly advised. Proficiency in basic regex is
+   very helpful for clean-up!
 
 # LIMITATIONS
   It is my personal opinion that Roll20's data format is, put simply, utter shit. I have
@@ -70,8 +70,8 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
    everywhere, it's likely meant to be one of those.
 
 # CONTACT
-  - spap [hash] 9812
-  - spappz [at] firemail [dot] cc
+  - spap [has#] 9812
+  - spappz [@t] fire mail [d.t] cc
 
   pls no spam
 
