@@ -32,9 +32,9 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
    very helpful for clean-up!
 
 # LIMITATIONS
-  It is my personal opinion that Roll20's data format is, put simply, utter shit. I have
-   experienced huge differences in data structure, and sometimes data just seems to be
-   malformed or altogether absent. I have done my best to compensate.
+  It is my personal opinion that Roll20's data format is, put simply, utter sh--- very
+  poor. I have experienced huge differences in data structure, and sometimes data just
+  seems to be malformed or altogether absent. I have done my best to compensate.
 
   This script doesn't handle and will likely break with the following:
    - basically anything that isn't formatted remotely like WotC
@@ -1218,7 +1218,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     switch -regex ($5et.action.entries) {
         '^\{@atk mw' { $5et.miscTags += "MW" }
         '^\{@atk rw' { $5et.miscTags += "RW" }
-        '\breach \d{2,} ft\.' { $5et.miscTags += "RCH" }
+        '\breach \d{2,} ?ft\.' { $5et.miscTags += "RCH" }
         '\b(sphere|line|cone|cube)\b' { $5et.miscTags += "AOE" }
         '\b(each (target|creature)|(targets|creatures)) (with)?in (a )?\d+( |-)f(oo|ee)?t\b' { $5et.miscTags += "AOE" }
     }
