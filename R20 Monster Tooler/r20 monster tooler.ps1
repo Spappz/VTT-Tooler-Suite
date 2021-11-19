@@ -895,47 +895,48 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     Write-Progress -Activity $name -Status "Attributing tags..." -PercentComplete 59.375 -Id 1 -ParentId 0
     $5et | Add-Member -NotePropertyName traitTags -NotePropertyValue @()
     switch -regex ($5et.trait.name) {
-            "^turn immunity" { $5et.traitTags += "Turn Immunity" }
-            "^brute" { $5et.traitTags += "Brute" }
-            "^antimagic susceptibility" { $5et.traitTags += "Antimagic Susceptibility" }
-            "^sneak attack" { $5et.traitTags += "Sneak Attack" }
-            "^reckless" { $5et.traitTags += "Reckless" }
-            "^web sense" { $5et.traitTags += "Web Sense" }
-            "^flyby" { $5et.traitTags += "Flyby" }
-            "^pounce" { $5et.traitTags += "Pounce" }
-            "^water breathing" { $5et.traitTags += "Water Breathing" }
-            "^turn(ing)? (defiance|resistance)" { $5et.traitTags += "Turn Resistance" }
-            "^undead fortitude" { $5et.traitTags += "Undead Fortitude" }
-            "^aggressive" { $5et.traitTags += "Aggressive" }
-            "^illumination" { $5et.traitTags += "Illumination" }
-            "^rampage" { $5et.traitTags += "Rampage" }
-            "^rejuvenation" { $5et.traitTags += "Rejuvenation" }
-            "^web walker" { $5et.traitTags += "Web Walker" }
-            "^incorporeal movement" { $5et.traitTags += "Incorporeal Movement" }
-            "^keen (sight|hearing|smell|senses)" { $5et.traitTags += "Keen Senses" }
-            "^hold breath" { $5et.traitTags += "Hold Breath" }
-            "^charge" { $5et.traitTags += "Charge" }
-            "^fey ancestry" { $5et.traitTags += "Fey Ancestry" }
-            "^siege monster" { $5et.traitTags += "Siege Monster" }
-            "^pack tactics" { $5et.traitTags += "Pack Tactics" }
-            "^regenerat" { $5et.traitTags += "Regeneration" }
-            "^shapechange" { $5et.traitTags += "Shapechanger" }
-            "^false appearance" { $5et.traitTags += "False Appearance" }
-            "^spider climb" { $5et.traitTags += "Spider Climb" }
-            "^sunlight (hyper)?sensitivity" { $5et.traitTags += "Sunlight Sensitivity" }
-            "^light sensitivity" { $5et.traitTags += "Light Sensitivity" }
-            "^amphibious" { $5et.traitTags += "Amphibious" }
-            "^legendary resistance" { $5et.traitTags += "Legendary Resistances" }
-            "^magic weapon" { $5et.traitTags += "Magic Weapons" }
-            "^magic resistance" { $5et.traitTags += "Magic Resistance" }
-            "^spell immunity" { $5et.traitTags += "Spell Immunity" }
-            "^ambush" { $5et.traitTags += "Ambusher" }
-            "^amorphous" { $5et.traitTags += "Amorphous" }
-            "^death (burst|throes)" { $5et.traitTags += "Death Burst" }
-            "^devil'?s? sight" { $5et.traitTags += "Devil's Sight" }
-            "^immutable form" { $5et.traitTags += "Immutable Form" }
-        }
-    if ($5et.traitTags.Count -eq 0) {
+        "^aggressive\b" { $5et.traitTags += "Aggressive" }
+        "^ambush\b" { $5et.traitTags += "Ambusher" }
+        "^amorphous\b" { $5et.traitTags += "Amorphous" }
+        "^amphibious\b" { $5et.traitTags += "Amphibious" }
+        "^antimagic susceptibility\b" { $5et.traitTags += "Antimagic Susceptibility" }
+        "^brute\b" { $5et.traitTags += "Brute" }
+        "^charge\b" { $5et.traitTags += "Charge" }
+        "^damage absorption\b" { $5et.traitTags += "Damage Absorption" }
+        "^death (burst|throes)\b" { $5et.traitTags += "Death Burst" }
+        "^devil['s]{0,2} sight\b" { $5et.traitTags += "Devil's Sight" }
+        "^false appearance\b" { $5et.traitTags += "False Appearance" }
+        "^fey ancestry\b" { $5et.traitTags += "Fey Ancestry" }
+        "^flyby\b" { $5et.traitTags += "Flyby" }
+        "^hold breath\b" { $5et.traitTags += "Hold Breath" }
+        "^illumination\b" { $5et.traitTags += "Illumination" }
+        "^immutable form\b" { $5et.traitTags += "Immutable Form" }
+        "^incorporeal movement\b" { $5et.traitTags += "Incorporeal Movement" }
+        "^keen (sight|hearing|smell|senses)\b" { $5et.traitTags += "Keen Senses" }
+        "^legendary resistance\b" { $5et.traitTags += "Legendary Resistances" }
+        "^light sensitivity\b" { $5et.traitTags += "Light Sensitivity" }
+        "^magic resistance\b" { $5et.traitTags += "Magic Resistance" }
+        "^magic weapon\b" { $5et.traitTags += "Magic Weapons" }
+        "^pack tactics\b" { $5et.traitTags += "Pack Tactics" }
+        "^pounce\b" { $5et.traitTags += "Pounce" }
+        "^rampage\b" { $5et.traitTags += "Rampage" }
+        "^reckless\b" { $5et.traitTags += "Reckless" }
+        "^regenerat(e|ion)\b" { $5et.traitTags += "Regeneration" }
+        "^rejuvenat(e|ion)\b" { $5et.traitTags += "Rejuvenation" }
+        "^shapechange\b" { $5et.traitTags += "Shapechanger" }
+        "^siege monster\b" { $5et.traitTags += "Siege Monster" }
+        "^sneak attack\b" { $5et.traitTags += "Sneak Attack" }
+        "^spell immunity\b" { $5et.traitTags += "Spell Immunity" }
+        "^spider climb\b" { $5et.traitTags += "Spider Climb" }
+        "^sunlight (hyper)?sensitivity\b" { $5et.traitTags += "Sunlight Sensitivity" }
+        "^turn(ing)? immunity\b" { $5et.traitTags += "Turn Immunity" }
+        "^turn(ing)? (defiance|resistance)\b" { $5et.traitTags += "Turn Resistance" }
+        "^undead fortitude\b" { $5et.traitTags += "Undead Fortitude" }
+        "^water breathing\b" { $5et.traitTags += "Water Breathing" }
+        "^web sense\b" { $5et.traitTags += "Web Sense" }
+        "^web walker\b" { $5et.traitTags += "Web Walker" }
+    }
+	if ($5et.traitTags.Count -eq 0) {
         $5et.PSObject.Properties.Remove('traitTags')
     }
 
