@@ -91,12 +91,12 @@ function Tag-Entries {
             $input -replace '^\s+' -replace '\s+$' `
             -replace '\b(\d+d[\dd \+\-×x\*÷/]*\d)(?=( (\w){4,9})? damage\b)(?!\})', '{@damage $1}' `
             -replace '(?<=\brolls? (a )?)(d\d+)\b(?!\})', '{@dice $2}' `
-            -replace '(?<!@(damage|dice)) (\d+d[\dd \+\-×x\*÷\/]*\d)(?=( |\.|,))(?!\})', ' {@dice $2}' `
+            -replace '(?<!@d(amage|ice)) (\d+d[\dd \+-×x\*÷/]*\d)\b(?!\})', ' {@dice $2}' `
             -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier|bonus))', '{@hit $1}' `
             -replace "(?<=\b(be(comes?)?|is|while|a(lso|nd)?|or|th(e|at)) )(blinded|charmed|deafened|frightened|grappled|incapacitated|invisible|paralyzed|petrified|poisoned|restrained|stunned)\b", '{@condition $5}' `
             -replace "(?<=\b(knocked|pushed|shoved|becomes?|falls?|while|lands?) )(prone|unconscious)\b", '{@condition $2}' `
             -replace "(?<=levels? of )exhaustion\b", "{@condition exhaustion}" `
-            -creplace '(?<=\b(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) \()(Athletics|Acrobatics|Sleight of Hand|Stealth|Arcana|History|Investigation|Nature|Religion|Animal Handling|Insight|Medicine|Perception|Survival|Deception|Intimidation|Performance|Persuasion)\b', '{@skill $2}' `
+            -creplace '(?<=\()(Athletics|Acrobatics|Sleight of Hand|Stealth|Arcana|History|Investigation|Nature|Religion|Animal Handling|Insight|Medicine|Perception|Survival|Deception|Intimidation|Performance|Persuasion)(?=\))', '{@skill $2}' `
             -creplace '\b(Athletics|Acrobatics|Sleight of Hand|Stealth|Arcana|History|Investigation|Nature|Religion|Animal Handling|Insight|Medicine|Perception|Survival|Deception|Intimidation|Performance|Persuasion)(?= (check|modifier|bonus|roll|score))', '{@skill $1}' `
             -replace '(?<!cast (the )?)\b(darkvision|blindsight|tremorsense|truesight)\b(?! spell)', '{@sense $2}' `
             -creplace "\b(Attack(?! roll)|Cast a Spell|Dash|Disengage|Dodge|Help|Hide|Ready|Search|Use an Object)\b", '{@action $1}' `
