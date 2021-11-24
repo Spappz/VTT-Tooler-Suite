@@ -28,3 +28,7 @@ You should be aware of the following limitations with this automated conversion.
 If something goes wrong, either an `xxxERRORxxx : <error message>` string will be put in the appropriate JSON attribute, or the script will crash. Good luck!
    
 Last tested under Foundry VTT [`dnd5e` system](https://gitlab.com/foundrynet/dnd5e) version 1.5.3. Support outside this version is not guaranteed.
+
+### Longevity
+
+Please [create an issue](https://github.com/Spappz/VTT-Tooler-Suite/issues/new) if you'd like some extra work on this: bugs to fix, changes to the `dnd5e` system, features to develop, etc.

@@ -44,3 +44,9 @@ Roll20 doesn't store everything that 5etools does. The following always requires
 Although this script tries to automatically match taggable strings, it is far from perfect. After addressing the errors, you should verify that filter arrays (e.g. `miscTags`, `conditionInflict`) are accurate, and tag anything relevant in `entries` arrays.
 
 Also this handles lists and tables terribly. If you see random italics or `<li>` tags everywhere, it's likely meant to be one of those.
+
+### Longevity
+
+This script sits in a precarious position for two reasons. Firstly, in the simplest of terms, I hate Roll20's schema. Secondly—and definitely unrelatedly!—this was my first script, written while I was still learning Powershell. As such, it has quite a few messy idiosyncracies, even if the overall script is perfectly functional.
+
+Please only [create issues](https://github.com/user/repository/issues/new) for this tooler if you encounter a script-breaking bug; I presently have no intention to improve, develop, or refactor it otherwise. (You're welcome to try to convince me otherwise. 😏)
