@@ -180,23 +180,23 @@ function HtmlTo-Entries {
                 }
                 if ($widths) {
                     if ($aligns) {
-                        $obj | Add-Member -NotePropertyName colStyles -NotePropertyValue $(
+                        $obj | Add-Member -MemberType NoteProperty -Name colStyles -Value $(
                             for ($i = 0; $i -lt $widths.Count; $i++) {
                                 $widths[$i] + $(if ($aligns[$i]) { " " + $aligns[$i] } else { $null })
                             }
                         )
                     } else {
-                        $obj | Add-Member -NotePropertyName colStyles -NotePropertyValue $widths
+                        $obj | Add-Member -MemberType NoteProperty -Name colStyles -Value $widths
                     }
                 } elseif ($aligns) {
-                    $obj | Add-Member -NotePropertyName colStyles -NotePropertyValue $aligns
+                    $obj | Add-Member -MemberType NoteProperty -Name colStyles -Value $aligns
                 }
                 if ($_ -match '<thead( style=".*?")?>') {
-                    $obj | Add-Member -NotePropertyName colLabels -NotePropertyValue @(
+                    $obj | Add-Member -MemberType NoteProperty -Name colLabels -Value @(
                         $_ -replace '^.*<thead\b.*?>\s*<tr\b.*?>\s*(.*)\s*</td>\s*</tr>\s*</thead>.*$', '$3' -replace '<td\b.*?>' -replace '</?(strong|em|b)\b.*?>' -split '</td>'
                     )
                 } elseif ($_ -match '<th\b') {
-                    $obj | Add-Member -NotePropertyName colLabels -NotePropertyValue @(
+                    $obj | Add-Member -MemberType NoteProperty -Name colLabels -Value @(
                         $_ -replace '^.*?<th\b.*?>' -replace '</th></tr>.*?$' -replace '</?(strong|em|b)\b.*?>' -split '</th>\s*<th\b.*?>'
                     )
                 } else {
@@ -206,7 +206,7 @@ function HtmlTo-Entries {
                 $_ -replace '^.*?<tbody\b.*?>' -replace '^.*</th></tr>' -replace '</td>\s*</tr>\s*(</tbody>)?\s*</table>' -split '</tr>' | ForEach-Object {
                     $rows += , (($_ -split '</td>').Trim() -replace '^.*?<td\b.*?>' -ne "" | Tag-Entries)
                 }
-                $obj | Add-Member -NotePropertyName rows -NotePropertyValue $rows
+                $obj | Add-Member -MemberType NoteProperty -Name rows -Value $rows
                 $obj
                 continue
             }
@@ -389,22 +389,22 @@ $foundry | ForEach-Object -Begin {
     $5et = [PSCustomObject]::new()
 
     if ($overrideSource) {
-        $5et | Add-Member -NotePropertyName source -NotePropertyValue $overrideSource
+        $5et | Add-Member -MemberType NoteProperty -Name source -Value $overrideSource
     } else {
-        $5et | Add-Member -NotePropertyName source -NotePropertyValue ($_.data.source -replace '\bp[pa]?(ge?)?(\. ?|\-)?(\d+)(?!\d)')
+        $5et | Add-Member -MemberType NoteProperty -Name source -Value ($_.data.source -replace '\bp[pa]?(ge?)?(\. ?|\-)?(\d+)(?!\d)')
     }
 
     if ($extractPageNumbers) {
-        $5et | Add-Member -NotePropertyName page -NotePropertyValue ($_.data.source -replace '^.*\bp[pa]?(ge?)?(\. ?|\-)?(\d+)(?!\d).*$', '$3')
+        $5et | Add-Member -MemberType NoteProperty -Name page -Value ($_.data.source -replace '^.*\bp[pa]?(ge?)?(\. ?|\-)?(\d+)(?!\d).*$', '$3')
     } else {
-        $5et | Add-Member -NotePropertyName page -NotePropertyValue 0
+        $5et | Add-Member -MemberType NoteProperty -Name page -Value 0
     }
 
-    $5et | Add-Member -NotePropertyName name -NotePropertyValue $_.name
+    $5et | Add-Member -MemberType NoteProperty -Name name -Value $_.name
 
-    $5et | Add-Member -NotePropertyName level -NotePropertyValue $_.data.level
+    $5et | Add-Member -MemberType NoteProperty -Name level -Value $_.data.level
 
-    $5et | Add-Member -NotePropertyName school -NotePropertyValue $(
+    $5et | Add-Member -MemberType NoteProperty -Name school -Value $(
         switch ($_.data.school) {
             abj { "A" }
             enc { "E" }
@@ -420,19 +420,19 @@ $foundry | ForEach-Object -Begin {
     )
 
     if ($_.data.components.ritual) {
-        $5et | Add-Member -NotePropertyName meta -NotePropertyValue @{
+        $5et | Add-Member -MemberType NoteProperty -Name meta -Value @{
             ritual = $true
         }
     }
 
-    $5et | Add-Member -NotePropertyName time -NotePropertyValue @(
+    $5et | Add-Member -MemberType NoteProperty -Name time -Value @(
         [PSCustomObject]@{
             number = $_.data.activation.cost
             unit = $_.data.activation.type
         }
     )
     if ($_.data.activation.condition) {
-        $5et.time[0] | Add-Member -NotePropertyName condition -NotePropertyValue $_.data.activation.condition
+        $5et.time[0] | Add-Member -MemberType NoteProperty -Name condition -Value $_.data.activation.condition
         if ($5et.time[0].unit -ne "reaction") {
             $status = "w"
         }
@@ -440,14 +440,14 @@ $foundry | ForEach-Object -Begin {
 
     if ($_.data.range.units -eq "self") {
         if ($_.data.target.units -notin "radius", "line", "sphere", "cone", "cube", "cylinder") {
-            $5et | Add-Member -NotePropertyName range -NotePropertyValue ([PSCustomObject]@{
+            $5et | Add-Member -MemberType NoteProperty -Name range -Value ([PSCustomObject]@{
                 type = "point"
                 distance = @{
                     type = "self"
                 }
             })
         } else {
-            $5et | Add-Member -NotePropertyName range -NotePropertyValue ([PSCustomObject]@{
+            $5et | Add-Member -MemberType NoteProperty -Name range -Value ([PSCustomObject]@{
                 type = $(
                     switch ($_.data.target.type) {
                         radius { "radius" }
@@ -470,7 +470,7 @@ $foundry | ForEach-Object -Begin {
         }
     } else {
         $range = $_.data.range
-        $5et | Add-Member -NotePropertyName range -NotePropertyValue ([PSCustomObject]@{
+        $5et | Add-Member -MemberType NoteProperty -Name range -Value ([PSCustomObject]@{
             type = "point"
             distance = $(
                 switch ($range.units) {
@@ -513,29 +513,29 @@ $foundry | ForEach-Object -Begin {
         })
     }
 
-    $5et | Add-Member -NotePropertyName components -NotePropertyValue ([PSCustomObject]::new())
+    $5et | Add-Member -MemberType NoteProperty -Name components -Value ([PSCustomObject]::new())
     if ($_.data.components.vocal) {
-        $5et.components | Add-Member -NotePropertyName v -NotePropertyValue $true
+        $5et.components | Add-Member -MemberType NoteProperty -Name v -Value $true
     }
     if ($_.data.components.somatic) {
-        $5et.components | Add-Member -NotePropertyName s -NotePropertyValue $true
+        $5et.components | Add-Member -MemberType NoteProperty -Name s -Value $true
     }
     if ($_.data.components.material) {
         if ($_.data.materials.cost) {
-            $5et.components | Add-Member -NotePropertyName m -NotePropertyValue ([PSCustomObject]@{
+            $5et.components | Add-Member -MemberType NoteProperty -Name m -Value ([PSCustomObject]@{
                 text = ($_.data.materials.value -replace '\.$').Trim()
                 cost = $_.data.materials.cost * 100
                 consume = $_.data.materials.consumed
             })
         } elseif ($_.data.materials.value) {
-            $5et.components | Add-Member -NotePropertyName m -NotePropertyValue ($_.data.materials.value -replace '\.$').Trim()
+            $5et.components | Add-Member -MemberType NoteProperty -Name m -Value ($_.data.materials.value -replace '\.$').Trim()
         } else {
-            $5et.components | Add-Member -NotePropertyName m -NotePropertyValue $true
+            $5et.components | Add-Member -MemberType NoteProperty -Name m -Value $true
         }
     }
 
     if ($_.data.duration.value) {
-        $5et | Add-Member -NotePropertyName duration -NotePropertyValue @(
+        $5et | Add-Member -MemberType NoteProperty -Name duration -Value @(
             [PSCustomObject]@{
                 type = "timed"
                 duration = [PSCustomObject]@{
@@ -559,10 +559,10 @@ $foundry | ForEach-Object -Begin {
             }
         )
         if ($_.data.components.concentration) {
-            $5et.duration[0] | Add-Member -NotePropertyName concentration -NotePropertyValue $true
+            $5et.duration[0] | Add-Member -MemberType NoteProperty -Name concentration -Value $true
         }
     } else {
-        $5et | Add-Member -NotePropertyName duration -NotePropertyValue @(
+        $5et | Add-Member -MemberType NoteProperty -Name duration -Value @(
             switch -Regex ($_.data.duration.units) {
                 'inst(ant(aneous)?)?' {
                     [PSCustomObject]@{type = "instant"}
@@ -590,7 +590,7 @@ $foundry | ForEach-Object -Begin {
     
     ($entries, $entriesHigherLevel) = $_.data.description.value -split '\s*<(p|br) ?(style=".*?")?/?>\s*(<(em|i|strong|b)>)*(\s*(At )?Higher Levels)([\.: ]|</(em|i|strong|b)>)*', 0, "ExplicitCapture"
     $entries = $entries | HtmlTo-Entries
-    $5et | Add-Member -NotePropertyName entries -NotePropertyValue $entries.entries
+    $5et | Add-Member -MemberType NoteProperty -Name entries -Value $entries.entries
     if ($entries.status) {
         $status += "w"
     }
@@ -599,7 +599,7 @@ $foundry | ForEach-Object -Begin {
         if ($_.data.scaling.mode -eq "level" -and $_.data.scaling.formula) {
             $entriesHigherLevel.entries = $entriesHigherLevel.entries -replace $('\{@dice ' + $_.data.scaling.formula + '}'), $('{@scaledice ' + $_.data.damage.parts[0][0] + '|' + $_.data.level + '-9|' + $_.data.scaling.formula + '}')
         }
-        $5et | Add-Member -NotePropertyName entriesHigherLevel -NotePropertyValue @(
+        $5et | Add-Member -MemberType NoteProperty -Name entriesHigherLevel -Value @(
             [PSCustomObject]@{
                 type = "entries"
                 name = "At Higher Levels"
@@ -618,16 +618,16 @@ $foundry | ForEach-Object -Begin {
             if ($damageInflict.Count -eq 0) {
                 $status += "w"
             } else {
-                $5et | Add-Member -NotePropertyName damageInflict -NotePropertyValue @($damageInflict)
+                $5et | Add-Member -MemberType NoteProperty -Name damageInflict -Value @($damageInflict)
             }
         } else {
-            $5et | Add-Member -NotePropertyName damageInflict -NotePropertyValue @($damageInflict)
+            $5et | Add-Member -MemberType NoteProperty -Name damageInflict -Value @($damageInflict)
         }
     }
 
     $conditionInflict = ,$entries.entries | Find-Condition
     if ($conditionInflict) {
-        $5et | Add-Member -NotePropertyName conditionInflict -NotePropertyValue @($conditionInflict)
+        $5et | Add-Member -MemberType NoteProperty -Name conditionInflict -Value @($conditionInflict)
     }
 
     $areaTags = switch ($_.data.target.type) {
@@ -647,18 +647,18 @@ $foundry | ForEach-Object -Begin {
         $areaTags = "MT"
     }
     if ($areaTags) {
-        $5et | Add-Member -NotePropertyName areaTags -NotePropertyValue @($areaTags)
+        $5et | Add-Member -MemberType NoteProperty -Name areaTags -Value @($areaTags)
     }
     
     if ($_.data.actionType -eq "msak") {
-        $5et | Add-Member -NotePropertyName spellAttack -NotePropertyValue @("M")
+        $5et | Add-Member -MemberType NoteProperty -Name spellAttack -Value @("M")
     }
     if ($_.data.actionType -eq "rsak") {
-        $5et | Add-Member -NotePropertyName spellAttack -NotePropertyValue @("R")
+        $5et | Add-Member -MemberType NoteProperty -Name spellAttack -Value @("R")
     }
 
     if ($_.data.save.ability) {
-        $5et | Add-Member -NotePropertyName savingThrow -NotePropertyValue @($(
+        $5et | Add-Member -MemberType NoteProperty -Name savingThrow -Value @($(
             switch ($_.data.save.ability) {
                 str { "strength" }
                 dex { "dexterity" }
@@ -676,7 +676,7 @@ $foundry | ForEach-Object -Begin {
 
     $abilityCheck = ,$entries.entries | Find-AbilityCheck
     if ($abilityCheck) {
-        $5et | Add-Member -NotePropertyName abilityCheck -NotePropertyValue @($abilityCheck)
+        $5et | Add-Member -MemberType NoteProperty -Name abilityCheck -Value @($abilityCheck)
     }
 
     $miscTags = [System.Collections.ArrayList]::new()
@@ -708,7 +708,7 @@ $foundry | ForEach-Object -Begin {
         $miscTags += "TP"
     }
     if ($miscTags) {
-        $5et | Add-Member -NotePropertyName miscTags -NotePropertyValue @($miscTags)
+        $5et | Add-Member -MemberType NoteProperty -Name miscTags -Value @($miscTags)
     }
 
     #damageResist
