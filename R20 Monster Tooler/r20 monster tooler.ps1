@@ -163,11 +163,11 @@ function Process-Spell {
                 "(?<=\{@spell )resilient sphere\}" { $_ -replace "resilient sphere\}", "otiluke's resilient sphere|phb|resilient sphere}" }
                 "(?<=\{@spell )irresistible dance\}" { $_ -replace "irresistible dance\}", "otto's irresistible dance|phb|irresistible dance}" }
                 "(?<=\{@spell )telepathic bond\}" { $_ -replace "telepathic bond\}", "rary's tiny telepathic bondhut|phb|telepathic bond}" }
-                "hideous laughter\}" {
+                "(?<=\{@spell )hideous laughter\}" {
                     $_ -replace "(?<=\{@spell )hideous laughter", "tasha's hideous laughter|phb|hideous laughter"
                     $5et.conditionInflictSpell += @( "prone", "incapacitated" )
                 }
-                "(?<=\{@spell )floating disk\}" { $_ -replace "hideous laughter\}", "tenser's floating disk|phb|floating disk}" }
+                "(?<=\{@spell )floating disk\}" { $_ -replace "floating disk\}", "tenser's floating disk|phb|floating disk}" }
                 "(?<=\{@spell )blindness\/deafness\}" { $_; $5et.conditionInflictSpell += @( "blinded", "unconscious" ) }
                 "(?<=\{@spell )color spray\}" { $_; $5et.conditionInflictSpell += "blinded" }
                 "(?<=\{@spell )contagion\}" { $_; $5et.conditionInflictSpell += @( "poisoned", "blinded", "stunned" ) }
@@ -282,13 +282,13 @@ function Tag-Entries {
             -replace '(?<=\()([\dd \+\-×x\*÷\/\*]+\d)(?=\))', '{@damage $1}' `
             -replace '\b(\d+d[\dd \+\-×x\*÷\/]*\d)(?= (\w){4,9} damage\b)(?!\})', '{@damage $1}' `
             -replace '(?<=\brolls? a )(d\d+)\b(?!\})', '{@dice $1}' `
-            -replace '(?<!@d(amage|ice)) (\d+d[\dd \+-×x\*÷/]*\d)\b(?!\})', ' {@dice $2}' `
+            -replace '(?<!@d(amage|ice)) (\d+d[\dd \+\-×x\*÷/]*\d)\b(?!\})', ' {@dice $2}' `
             -creplace '\bDC ?(\d+)\b', '{@dc $1}' `
             -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier|bonus))', '{@hit $1}' `
             -replace "(?<=\b(be(comes?)?|is|while|a(lso|nd)?|or|the) )(blinded|charmed|deafened|frightened|grappled|incapacitated|invisible|paralyzed|petrified|poisoned|restrained|stunned)\b", '{@condition $4}' `
             -replace "(?<=\b(knocked|pushed|shoved|becomes?|falls?|while|lands?) )(prone|unconscious)\b", '{@condition $2}' `
             -replace "(?<=levels? of )exhaustion\b", "{@condition exhaustion}" `
-            -creplace '(?<=\()(Athletics|Acrobatics|Sleight of Hand|Stealth|Arcana|History|Investigation|Nature|Religion|Animal Handling|Insight|Medicine|Perception|Survival|Deception|Intimidation|Performance|Persuasion)(?=\))', '{@skill $2}' `
+            -creplace '(?<=\()(Athletics|Acrobatics|Sleight of Hand|Stealth|Arcana|History|Investigation|Nature|Religion|Animal Handling|Insight|Medicine|Perception|Survival|Deception|Intimidation|Performance|Persuasion)(?=\))', '{@skill $1}' `
             -creplace '\b(Athletics|Acrobatics|Sleight of Hand|Stealth|Arcana|History|Investigation|Nature|Religion|Animal Handling|Insight|Medicine|Perception|Survival|Deception|Intimidation|Performance|Persuasion)(?= (check|modifier|bonus|roll|score))', '{@skill $1}' `
             -replace '(?<!cast (the )?)\b(darkvision|blindsight|tremorsense|truesight)\b(?! spell)', '{@sense $2}' `
             -replace "(?<=use )(.{,30}?)(?= statistics)", '{@creature $1}' `
