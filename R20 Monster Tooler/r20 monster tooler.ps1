@@ -168,7 +168,7 @@ function Process-Spell {
                     $5et.conditionInflictSpell += @( "prone", "incapacitated" )
                 }
                 "(?<=\{@spell )floating disk\}" { $_ -replace "floating disk\}", "tenser's floating disk|phb|floating disk}" }
-                "(?<=\{@spell )blindness\/deafness\}" { $_; $5et.conditionInflictSpell += @( "blinded", "unconscious" ) }
+                "(?<=\{@spell )blindness\/deafness\}" { $_; $5et.conditionInflictSpell += @( "blinded" ) }
                 "(?<=\{@spell )color spray\}" { $_; $5et.conditionInflictSpell += "blinded" }
                 "(?<=\{@spell )contagion\}" { $_; $5et.conditionInflictSpell += @( "poisoned", "blinded", "stunned" ) }
                 "(?<=\{@spell )divine word\}" { $_; $5et.conditionInflictSpell += @( "deafened", "blinded", "stunned" ) }
