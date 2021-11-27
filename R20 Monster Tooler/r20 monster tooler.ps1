@@ -129,8 +129,8 @@ $brew = @{
         dateAdded = [int64](get-date -uformat %s)
         dateLastModified = [int64](get-date -uformat %s)
     }
-    monster = @()
-    legendaryGroup = @()
+    monster = [System.Collections.ArrayList]::new()
+    legendaryGroup = [System.Collections.ArrayList]::new()
 }
 $progress = 0
 $progmax = (Get-ChildItem -Path .\characters\).Count
