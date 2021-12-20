@@ -66,6 +66,13 @@ $spellcastingActions = $true
 
 # INITIALISATION
 Clear-Host
+
+do { # Create log early because Powershell doesn't seem to have a way
+     # to export the console retroactively.
+    $path = 'temp-' + (-join (97..122 | Get-Random -Count 8 | ForEach-Object {[char]$_}))
+} while (Test-Path $path)
+$null = Start-Transcript -Path ("log-" + ($path -replace '^temp-') + ".txt")
+
 Write-Output "FANTASY GROUNDS TO 5ETOOLS MONSTER CONVERTER`n`nInitialising...`n`n"
 if (Test-Path ".\# BREW.json") {
     do {
@@ -104,9 +111,6 @@ if ((Get-ChildItem | Where-Object {$_.name -match '\.mod$'}).Count -gt 1) {
     $sourceFileName = (Get-ChildItem | Where-Object {$_.name -match '\.mod$'}).name -replace '\.mod$'
 }
 
-do {
-    $path = 'temp-' + (-join (97..122 | Get-Random -Count 8 | ForEach-Object {[char]$_}))
-} while (Test-Path $path)
 $null = New-Item $path -ItemType Directory
 Copy-Item ($sourceFileName + '.mod') $path\_zipzip.zip
 Expand-Archive $path\_zipzip.zip $path
@@ -132,8 +136,13 @@ if (-not $abbreviation) {
 }
 
 if ($addTokens -or $addImages) {
-    $null = New-Item ($source + "\creature") -ItemType Directory
-    Copy-Item ($path + "\thumbnail.png") ($source + "\cover.png")
+    if (Test-Path $source) {
+        $imagePath = $source + "-" + ($path -replace '^temp-')
+    } else {
+        $imagePath = $source
+    }
+    $null = New-Item ($imagePath + "\creature") -ItemType Directory
+    Copy-Item ($path + "\thumbnail.png") ($imagePath + "\cover.png")
 }
 
 $5et = [PSCustomObject]@{
@@ -227,23 +236,22 @@ function Tag-Entries { # Be careful editing; this catches almost everything I've
     )
     PROCESS {
         Write-Output (
-            $text -replace '^\s+' -replace '\s+$' `
+            $text -replace '^\s+' -replace '\s+$' -replace ' {2,}', ' ' `
                 -replace '(?<=\()([\dd \+\-×x\*÷\/\*]+\d)(?=\))', '{@damage $1}' `
                 -replace '\b(\d+d[\dd \+\-×x\*÷/]*\d)(?=( (\w){4,11})? damage\b)', '{@damage $1}' `
                 -replace '(?<=\brolls? (a )?)(d\d+)\b(?!\})', '{@dice $2}' `
                 -replace '(?<!@d(amage|ice)) (\d+d[\dd \+\-×x\*÷/]*\d)\b(?!\})', ' {@dice $2}' `
                 -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier|bonus))', '{@hit $1}' `
                 -creplace '\bDC ?(\d+)\b', '{@dc $1}' `
-                -replace "(?<=\b(be(comes?)?|is( ?n[o']t)?|while|a(lso|nd)?|or|th(e|at)) )(blinded|charmed|deafened|frightened|grappled|incapacitated|invisible|paralyzed|petrified|poisoned|restrained|stunned)\b", '{@condition $6}' `
+                -replace "(?<=\b(be(comes?)?|is( ?n[o']t)?|while|a(lso|nd)?|or|th(e|at)) )(blinded|charmed|deafened|frightened|grappled|in(capacitated|nvisible)|p(aralyz|etrifi|oison)ed|restrained|stunned|unconscious)\b", '{@condition $6}' `
                 -replace "(?<=\b(knocked|pushed|shoved|becomes?|falls?|while|lands?) )(prone|unconscious)\b", '{@condition $2}' `
                 -replace "(?<=levels? of )exhaustion\b", "{@condition exhaustion}" `
-                -creplace '(?<=\()(Athletics|Acrobatics|Sleight of Hand|Stealth|Arcana|History|Investigation|Nature|Religion|Animal Handling|Insight|Medicine|Perception|Survival|Deception|Intimidation|Performance|Persuasion)(?=\))', '{@skill $1}' `
-                -creplace '\b(Athletics|Acrobatics|Sleight of Hand|Stealth|Arcana|History|Investigation|Nature|Religion|Animal Handling|Insight|Medicine|Perception|Survival|Deception|Intimidation|Performance|Persuasion)(?= (check|modifier|bonus|roll|score))', '{@skill $1}' `
-                -replace '(?<!cast (the )?)\b(darkvision|blindsight|tremorsense|truesight)\b(?! spell)', '{@sense $2}' `
-                -creplace "\b(Attack(?! roll)|Cast a Spell|Dash|Disengage|Dodge|Help|Hide|Ready|Search|Use an Object)\b", '{@action $1}' `
+                -creplace '(?<=\()(A(thletics|crobatics|rcana|nimal Handling)|Per(ception|formance|suasion)|S(leight of Hand|tealth|urvival)|In(sight|vestigation|timidation)|Nature|Religion|Medicine|History|Deception)(?=\))', '{@skill $1}' `
+                -creplace '\b(A(thletics|crobatics|rcana|nimal Handling)|Per(ception|formance|suasion)|S(leight of Hand|tealth|urvival)|In(sight|vestigation|timidation)|Nature|Religion|Medicine|History|Deception)(?= (check|modifier|bonus|roll|score))', '{@skill $1}' `
+                -replace '(?<!cast (the )?)\b(darkvision|blindsight|tr(emorsense|uesight))\b(?! spell)', '{@sense $2}' `
+                -creplace "\b(Attack(?! roll)|Cast a Spell|D(ash|isengage|odge)|H(elp|ide)|Ready|Search|Use an Object)\b", '{@action $1}' `
                 -replace '\bopportunity attack\b', '{@action opportunity attack}' `
-                -replace '\b(\d{1,2}) percent chance\b', '{@chance $1} chance' `
-                -replace ' {2,}', ' '
+                -replace '\b(\d{1,2}) percent chance\b', '{@chance $1} chance'
         )
     }
 }
@@ -1887,7 +1895,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     # TOKEN
     if ($addTokens -and $_.token.$t -match '\.\w+(?!@DD5E SRD Bestiary)$') {
         try {
-            Copy-Item ($path + "\" + ($_.token.$t -replace '@.*$')) ($source + "\creature\" + $monster.name + " (Token)" + ($_.token.$t -replace '^.*(?=\.\w{2,6}$)')) -ErrorAction Stop
+            Copy-Item ($path + "\" + ($_.token.$t -replace '@.*$')) ($imagePath + "\creature\" + $monster.name + " (Token)" + ($_.token.$t -replace '^.*(?=\.\w{2,6}$)')) -ErrorAction Stop
             $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value ("$repo/$source/creature/" + $monster.name + " (Token)" + ($_.token.$t -replace '^.*(?=\.\w{2,6}$)'))
         } catch {
             $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value "xxxERRORxxx : Could not find image"
@@ -1908,7 +1916,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         if ($addImages -and $_.text.linklist) {
             foreach ($imageId in $_.text.linklist.link.recordname) {
                 try {
-                    Copy-Item ($path + "\" + $db.root.image.$c.$($imageId -replace '^image\.').image.layers.layer.bitmap) ($source + "\creature\" + $monster.name + ($db.root.image.$c.$($imageId -replace '^image\.').image.layers.layer.bitmap -replace '^.*(?=\.\w{2,6}$)')) -ErrorAction Stop
+                    Copy-Item ($path + "\" + $db.root.image.$c.$($imageId -replace '^image\.').image.layers.layer.bitmap) ($imagePath + "\creature\" + $monster.name + ($db.root.image.$c.$($imageId -replace '^image\.').image.layers.layer.bitmap -replace '^.*(?=\.\w{2,6}$)')) -ErrorAction Stop
                     $null = $monster.fluff.images.Add([PSCustomObject]@{
                         type = "image"
                         href = [PSCustomObject]@{
@@ -1984,8 +1992,11 @@ Write-Host "`nExporting file..." -NoNewLine
 ) -replace '—', '\u2014' -replace '–', '\u2013' -replace '−', '\u2212') | Out-File -FilePath ($definition.root.author + "; " + $definition.root.name + ".json") -Encoding UTF8
 Write-Host " Done.`n`n"
 
-if ((Read-Host "Save log to file? (Y/N)")[0] -eq "Y") {
-	Start-Transcript -Path ("log-" + ($path -replace '^temp-') + ".txt")
+if ((Read-Host "Save log to file? (Y/N)")[0] -ne "Y") {
+	Stop-Transcript
+	Remove-Item ("log-" + ($path -replace '^temp-') + ".txt")
 }
 
+Write-Host "`n`nRemoving temporary folder..." -NoNewLine
 Remove-Item $path -Recurse
+Write-Host " Done.`n`n"
