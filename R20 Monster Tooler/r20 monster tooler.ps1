@@ -1231,7 +1231,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     # TOKEN
     Write-Progress -Activity $name -Status "Portraiting..." -PercentComplete 81.25 -Id 1 -ParentId 0
     if ($token) {
-        $5et | Add-Member -NotePropertyName tokenUrl -NotePropertyValue ("https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img/" + $source + "/creature/token/" + $5et.name + " (Token).png")
+        $5et | Add-Member -NotePropertyName tokenUrl -NotePropertyValue ($repo + "/" + $source + "/creature/token/" + $5et.name + " (Token).png")
     }
 
     # FLUFF + LAIR ACTIONS + REGIONAL EFFECTS

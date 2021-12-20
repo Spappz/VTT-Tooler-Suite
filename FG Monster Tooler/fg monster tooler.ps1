@@ -7,7 +7,7 @@
 ########################################################################################>
 
 # BREW SETTINGS
-$source = "MME3"
+$source = "MonsterManualExpanded3"
     <# JSON source string. Set to "" or $false to instead generate a source string from
         the brew's name. #>
 $abbreviation = "MME3"
@@ -25,7 +25,7 @@ $addTokens = $true
     <# If $true, each monster's token will be extracted and placed in a folder in the
         current directory called $source. Where possible, a `tokenUrl` key is added to
         each monster, pointing to `$repo/$source/creature/<name> (Token).png`. #>
-$addImages = $false
+$addImages = $true
     <# If $true, each monster's image will be extracted and placed in a folder in the
         current directory called $source. Where possible, a `tokenUrl` key is added to
         each monster, pointing to `$repo/$source/creature/<name>.png`. If either
@@ -36,7 +36,7 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
 $bonusActions = $true
     <# Set to $true if the brew uses the modern Bonus Actions block and you want to try
         automating that. (Warning: highly experimental.) #>
-$spellcastingActions = $false
+$spellcastingActions = $true
     <# Regardless of how the FG `.mod` displays it, if the brew source treats
     spellcasting as a trait (legacy styling), set to $false. If it treats spellcasting
     as an action (modern styling), set to $true.
@@ -111,7 +111,7 @@ $null = New-Item $path -ItemType Directory
 Copy-Item ($sourceFileName + '.mod') $path\_zipzip.zip
 Expand-Archive $path\_zipzip.zip $path
 [xml]$definition = Get-Content $path\definition.xml
-[xml]$db = (Get-Content $path\db.xml -ReadCount 0 -Encoding UTF8) -replace "[’‘]", "'" -replace '[“”]', '"'
+[xml]$db = (Get-Content $path\db.xml -ReadCount 0 -Encoding UTF8) -replace "[‘’]|&#821(6|7);", "'" -replace '[“”]|&#822(0|1);', '"'
 
 if ($definition.root.ruleset -ne '5E') {
     Read-Host "`n`nno`n`n`n"
@@ -175,13 +175,13 @@ function Format-Entries { # haha this sucks
     PROCESS {
         Write-Output @(
             for ($i = 0; $i -lt $block.Count; $i++) {
-                switch ($block[$i].LocalName) {
+                switch -Exact ($block[$i].LocalName) {
                     desc {
                         Tag-Entries ($block[$i].$t -split '\\n')
                         break
                     }
-                    p { # bold = 3rd-degree nesting
-                        if ($block[$i].b) {
+                    p {
+                        if ($block[$i].b) { # bold => innermost entries header => 3rd-degree nesting
                             [PSCustomObject]@{ 
                                 type = "entries"
                                 entries = @(
@@ -266,65 +266,65 @@ function Process-SpellList {
                     $_ -replace "\barcane hand\}", "bigby's hand|phb|arcane hand}"
                     continue
                 }
-                "\binstant summons\}" {
+                "(?<!s )\binstant summons\}" {
                     $_ -replace "\binstant summons\}", "drawmij's instant summons|phb|instant summons}"
                     continue
                 }
-                "black tentacles\}" {
-                    $_ -replace "\bblack tentacles\}", "evard's black tentacles|phb|black tentacles}"
+                "\bblack tentacles\}" {
+                    $_ -replace "(?<!s )\bblack tentacles\}", "evard's black tentacles|phb|black tentacles}"
                     $null = $monster.conditionInflictSpell.Add("restrained")
                     continue
                 }
-                "\bsecret chest\}" {
+                "(?<!s )\bsecret chest\}" {
                     $_ -replace "\bsecret chest\}", "leomund's secret chest|phb|secret chest}"
                     continue
                 }
-                "\btiny hut\}" {
+                "(?<!s )\btiny hut\}" {
                     $_ -replace "\btiny hut\}", "leomund's tiny hut|phb|tiny hut}"
                     continue
                 }
-                "\bacid arrow\}" {
+                "(?<!s )\bacid arrow\}" {
                     $_ -replace "\bacid arrow\}", "melf's acid arrow|phb|acid arrow}"
                     continue
                 }
-                "\bfaithful hound\}" {
+                "(?<!s )\bfaithful hound\}" {
                     $_ -replace "\bfaithful hound\}", "mordenkainen's faithful hound|phb|faithful hound}"
                     continue
                 }
-                "\bmagnificent mansion\}" {
+                "(?<!s )\bmagnificent mansion\}" {
                     $_ -replace "\bmagnificent mansion\}", "mordenkainen's magnificent mansion|phb|magnificent mansion}"
                     continue
                 }
-                "\bprivate sanctum\}" {
+                "(?<!s )\bprivate sanctum\}" {
                     $_ -replace "\bprivate sanctum\}", "mordenkainen's private sanctum|phb|private sanctum}"
                     continue
                 }
-                "\barcanist's magic aura\}" {
+                "(?<!s )\barcanist's magic aura\}" {
                     $_ -replace "\barcanist's magic aura\}", "nystul's magic aura|phb|arcanist's magic aura}"
                     continue
                 }
-                "\bfreezing sphere\}" {
+                "(?<!s )\bfreezing sphere\}" {
                     $_ -replace "\bfreezing sphere\}", "otiluke's freezing sphere|phb|freezing sphere}"
                     continue
                 }
-                "\bresilient sphere\}" {
+                "(?<!s )\bresilient sphere\}" {
                     $_ -replace "\bresilient sphere\}", "otiluke's resilient sphere|phb|resilient sphere}"
                     continue
                 }
-                "\birresistible dance\}" {
+                "(?<!s )\birresistible dance\}" {
                     $_ -replace "\birresistible dance\}", "otto's irresistible dance|phb|irresistible dance}"
                     continue
                 }
-                "\btelepathic bond\}" {
-                    $_ -replace "\btelepathic bond\}", "rary's tiny telepathic bondhut|phb|telepathic bond}"
+                "(?<!s )\btelepathic bond\}" {
+                    $_ -replace "\btelepathic bond\}", "rary's telepathic bond|phb|telepathic bond}"
                     continue
                 }
                 "\bhideous laughter\}" {
-                    $_ -replace "\bhideous laughter\}", "tasha's hideous laughter|phb|hideous laughter"
+                    $_ -replace "(?<!s )\bhideous laughter\}", "tasha's hideous laughter|phb|hideous laughter"
                     $null = $monster.conditionInflictSpell.AddRange(@("prone", "incapacitated"))
                     continue
                 }
-                "\bfloating disk\}" {
+                "(?<!s )\bfloating disk\}" {
                     $_ -replace "\bfloating disk\}", "tenser's floating disk|phb|floating disk}"
                     continue
                 }
@@ -638,10 +638,10 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     $monster = [PSCustomObject]::new()
 
     # GENERAL DATA
-    $monster | Add-Member -NotePropertyMembers @{
+    $monster | Add-Member -NotePropertyMembers ([ordered]@{
         source = $source
         page = 0
-    }
+    })
 
     # NAME
     $monster | Add-Member -MemberType NoteProperty -Name name -Value $_.name.$t
@@ -659,38 +659,40 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                 Write-Host "`ts  |  Switch order       >  $($monster.name -replace '^(.+), (.+)$', '$2 $1')"
                 Write-Host "`td  |  Discard pre-comma  >  $($monster.name -replace '^.+, (.+)$', '$1')"
                 Write-Host "(Capitalise shortcut to apply for all.)"
-                do {
+                :promptUser do {
                     Write-Host "> " -NoNewLine
                     switch -Exact -CaseSensitive (Read-Host) {
-                        a { break }
+                        a { break promptUser }
                         s {
                             $monster.name = $monster.name -replace '^(.+), (.+)$', '$2 $1'
-                            break
+                            break promptUser
                         }
                         d {
                             $monster.name = $monster.name -replace '^.+, (.+)$', '$1'
-                            break
+                            break promptUser
                         }
                         A {
                             $nameQueryDefault = "a"
-                            break
+                            break promptUser
                         }
                         S {
                             $monster.name = $monster.name -replace '^(.+), (.+)$', '$2 $1'
                             $nameQueryDefault = "s"
-                            break
+                            break promptUser
                         }
                         D {
                             $monster.name = $monster.name -replace '^.+, (.+)$', '$1'
                             $nameQueryDefault = "d"
+                            break promptUser
                         }
                         default { 
                             if ($_.Length -gt 1) {
                                 $monster.name = $_
+                                break promptUser
                             }
                         }
                     }
-                } until ($monster.name.Length -gt 1)
+                } until ($false)
             }
         }
     }
@@ -779,11 +781,11 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         '^typically ' {
             $monster | Add-Member -MemberType NoteProperty -Name alignmentPrefix -Value "typically "
         }
-        '^unaligned$' {
+        '\bunaligned$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("U")
             continue
         }
-        '^neutral$' {
+        '\bneutral$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("N")
             continue
         }
@@ -791,87 +793,87 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("A")
             continue
         }
-        '^lawful good$' {
+        '\blawful good$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("L", "G")
             continue
         }
-        '^neutral good$' {
+        '\bneutral good$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("N", "G")
             continue
         }
-        '^chaotic good$' {
+        '\bchaotic good$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("C", "G")
             continue
         }
-        '^chaotic neutral$' {
+        '\bchaotic neutral$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("C", "N")
             continue
         }
-        '^lawful evil$' {
+        '\blawful evil$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("L", "E")
             continue
         }
-        '"^lawful neutral$' {
+        '\blawful neutral$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("L", "N")
             continue
         }
-        '^neutral evil$' {
+        '\bneutral evil$' {
              $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("N", "E")
             continue
         }
-        '^chaotic evil$' {
+        '\bchaotic evil$' {
              $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("C", "E")
             continue
         }
-        '^any non\-good( alignment)?$' {
+        '\bany non\-good( alignment)?$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("L", "NX", "C", "NY", "E")
             continue
         }
-        '^any non\-lawful( alignment)?$' {
+        '\bany non\-lawful( alignment)?$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("NX", "C", "G", "NY", "E")
             continue
         }
-        '^any non\-evil( alignment)?$' {
+        '\bany non\-evil( alignment)?$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("L", "NX", "C", "NY", "G")
             continue
         }
-        '^any non\-chaotic( alignment)?$' {
+        '\bany non\-chaotic( alignment)?$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("NX", "L", "G", "NY", "E")
             continue
         }
-        '^any chaotic( alignment)?$' {
+        '\bany chaotic( alignment)?$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("C", "G", "NY", "E")
             continue
         }
-        '^any evil( alignment)?$' {
+        '\bany evil( alignment)?$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("L", "NX", "C", "E")
             continue
         }
-        '^any lawful( alignment)?$' {
+        '\bany lawful( alignment)?$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("L", "G", "NY", "E")
             continue
         }
-        '^any good( alignment)?$' {
+        '\bany good( alignment)?$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("L", "NX", "C", "G")
             continue
         }
-        '^any neutral( alignment)?$' {
+        '\bany neutral( alignment)?$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("NX", "NY", "N")
             continue
         }
-        '^good$' {
+        '\bgood$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("G")
             continue
         }
-        '^lawful$' {
+        '\blawful$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("L")
             continue
         }
-        '^chaotic$' {
+        '\bchaotic$' {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("C")
             continue
         }
-        '^evil$' { $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("E") }
+        '\bevil$' { $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("E") }
         default {
             $monster | Add-Member -MemberType NoteProperty -Name alignment -Value @("xxxERRORxxx : Unknown alignment = ``" + $_ + "``")
             $status += "e"
@@ -1082,14 +1084,14 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     }
 
     # ABILITY SCORES
-    $monster | Add-Member -NotePropertyMembers @{
+    $monster | Add-Member -NotePropertyMembers ([ordered]@{
         str = [int]$_.abilities.strength.score.$t
         dex = [int]$_.abilities.dexterity.score.$t
         con = [int]$_.abilities.constitution.score.$t
         int = [int]$_.abilities.intelligence.score.$t
         wis = [int]$_.abilities.wisdom.score.$t
         cha = [int]$_.abilities.charisma.score.$t
-    }
+    })
 
     # SAVING THROWS
     if ($_.savingthrows) {
@@ -1196,8 +1198,10 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     # SENSES & PASSIVE PERCEPTION
     $null = $_.senses.$t -match '^(?<senses>.*)passive perception (?<passive>\d+)$'
     if ($Matches.senses) {
-        $monster | Add-Member -MemberType NoteProperty -Name senses -Value @($Matches.senses -split ', ' -ne "")
-        $monster | Add-Member -MemberType NoteProperty -Name passive -Value ([int]$Matches.passive)
+        $monster | Add-Member -NotePropertyMembers ([ordered]@{
+            senses = @($Matches.senses -split ', ' -ne "")
+            passive = [int]$Matches.passive
+        })
 
         # SENSE TAGS
         $monster | Add-Member -MemberType NoteProperty -Name senseTags -Value @(
@@ -1205,8 +1209,8 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                 '\bblindsight\b' { "B" }
                 '\bdarkvision \d{1,2}(?!\d)' { "D" }
                 '\bdarkvision \d{3,}(?!\d)' { "SD" }
-                '\dtremorsense\b' { "T" }
-                '\dtruesight\b' { "U" }
+                '\btremorsense\b' { "T" }
+                '\btruesight\b' { "U" }
             }
         )
     } else {
@@ -1469,10 +1473,10 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
 #           if ($spellcastingActions -and $_.name.$t -match '^(innate |shared )?spellcasting( \(.+\))?$') {
 #               $spellcastingFlag = $true
 #           } elseif ($_.desc.$t -cmatch '^As a bonus action, (?<firstletter>\w)') {
-            if ($_.desc.$t -cmatch '^As a bonus action, (?<firstletter>\w)') {
+            if ($_.desc.$t -cmatch '^As a bonus action, (?<firstLetter>\w)') {
                 $null = $monster.bonus.Add(([PSCustomObject]@{
                     name = $_.name.$t -replace '\(recharges? (\d)([-–—−]6)?\)', '{@recharge $1}'
-                    entries = @(Format-Entries $_.desc) -creplace '^As a bonus action, \w', $Matches.firstletter.ToUpper()
+                    entries = @(Tag-Entries ($_.desc.$t -creplace '^As a bonus action, \w', $Matches.firstLetter.ToUpper())) # See comment below
                 }))
             } else {
                 $null = $monster.action.Add(([PSCustomObject]@{
@@ -1542,7 +1546,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         $_.reactions.ChildNodes | ForEach-Object {
             $null = $monster.reaction.Add(([PSCustomObject]@{
                 name = $_.name.$t -replace '\(recharge (\d)([-–—−]6)?\)', '{@recharge $1}'
-                entries = @(Format-Entries $_.desc)
+                entries = @(Format-Entries @($_.desc))
             }))
             $null = $damageTags.AddRange(@(Enumerate-DamageTypes $_.desc.$t))
             $null = $conditionInflict.AddRange(@(Enumerate-Conditions $_.desc.$t))
@@ -1589,11 +1593,11 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
 
     # SPELLCASTING
     if ($spellcastingFlag) {
-        $monster | Add-Member -NotePropertyMembers @{
+        $monster | Add-Member -NotePropertyMembers ([ordered]@{
             spellcasting = [System.Collections.ArrayList]::new()
             spellcastingTags = [System.Collections.ArrayList]::new()
             conditionInflictSpell = [System.Collections.ArrayList]::new()
-        }
+        })
         $(                                  # SPELLCASTING
 #            if ($spellcastingActions) {    # Uncomment this section if you find an FG
 #                $_.actions.ChildNodes      # .mod that actually puts spellcasting blocks
@@ -1791,13 +1795,13 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
             } elseif ($Matches.name1 -eq $Matches.name2) {
                 $monster | Add-Member -MemberType NoteProperty -Name shortName -Value ($Matches.name1 -replace '^the ')
             } else {
-                $monster | Add-Member -MemberType NoteProperty -Name legendaryHeader -Value @(Format-Entries $_.legendaryactions.FirstChild.desc)
+                $monster | Add-Member -MemberType NoteProperty -Name legendaryHeader -Value @(Format-Entries @($_.legendaryactions.FirstChild.desc))
             }
             if ($Matches.num -ne 3) {
                 $monster| Add-Member -MemberType NoteProperty -Name legendaryActions -Value ([int]$Matches.num)
             }
         } else {
-            $monster | Add-Member -MemberType NoteProperty -Name legendaryHeader -Value @(Format-Entries $_.legendaryactions.FirstChild.desc)
+            $monster | Add-Member -MemberType NoteProperty -Name legendaryHeader -Value @(Format-Entries @($_.legendaryactions.FirstChild.desc))
             if ($monster.legendaryHeader -match '\b(?<num>d+) legendary actions?\b') {
                 $monster | Add-Member -MemberType NoteProperty -Name legendaryActions -Value ([int]$Matches.num)
             }
@@ -1820,11 +1824,11 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         $legendaryGroup = [PSCustomObject]@{
             source = $source
             name = $monster.name
-            lairActions = @(
+            lairActions = @( # Assumes standard formatting
                 $_.lairactions.'id-00001'.desc.$t,
                 [PSCustomObject]@{
                     type = "list"
-                    items = @(Format-Entries @($_.lairactions.ChildNodes.desc | Select-Object -Skip 1))
+                    items = @(Tag-Entries @(($_.lairactions.ChildNodes.desc.$t | Select-Object -Skip 1) -replace '^• ?'))
                 }
             )
         }
@@ -1839,7 +1843,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         }
 
         # REGIONAL EFFECTS
-        if ($_.text.InnerText -cmatch 'Regional Effects') { # Assumes standard formatting
+        if ($_.text.InnerText -cmatch 'Regional Effects') { # Also assumes standard formatting
             $legendaryGroup | Add-Member -MemberType NoteProperty -Name regionalEffects -Value (
                 [System.Collections.ArrayList]@(
                     (Tag-Entries $_.text.ChildNodes.InnerText.Where({$_ -eq 'Regional Effects'},'SkipUntil')[1]),
@@ -1934,8 +1938,8 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         if ($_.text.p) {
             $null = $monster.fluff.entries.AddRange(@(
                 Format-Entries @(
-                    $_.text.ChildNodes.Where({$_.b -in 'Lair Actions', 'Regional Effects' -or $_.h -in 'Lair Actions', 'Regional Effects'},'Until') | Where-Object { # need to filter out lair actions/regional effects
-                        $_.LocalName -ne "linklist" -and $_.InnerText -notmatch "^$($monster.name)"
+                    $_.text.ChildNodes.Where({$_.b -in 'Lair Actions', 'Regional Effects' -or $_.h -in 'Lair Actions', 'Regional Effects'},'Until') | Where-Object {
+                        $_.LocalName -ne "linklist" -and $_.InnerText -ne $monster.name -and $_.OuterXml -notmatch '/>$'
                     }
                 )
             ))
@@ -1970,14 +1974,18 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
 Write-Output ("`n`n`nCompleted conversion of " + $progmax + " monsters with " + $errors + " errors (" + [math]::Round($errors/$progmax*100) + "%) and " + $warnings + " warnings (" + [math]::Round($warnings/$progmax*100) + "%).`n")
 
 Write-Host "`nExporting file..." -NoNewLine
-(($5et | ConvertTo-Json -Depth 99 -Compress | ForEach-Object {
-    [Regex]::Replace($_, "\\u(?<Value>\w{4})", {
-        param($matches)
+([Regex]::Replace(
+    (ConvertTo-Json $5et -Depth 99 -Compress),
+    "\\u(?<Value>\w{4})",
+    {
+        PARAM($matches)
         ([char]([int]::Parse($matches.Groups['Value'].Value, [System.Globalization.NumberStyles]::HexNumber))).ToString()
-    })
-}) -replace '—', '\u2014' -replace '–', '\u2013') | Out-File -FilePath ($definition.root.author + "; " + $definition.root.name + ".json") -Encoding UTF8
+    }
+) -replace '—', '\u2014' -replace '–', '\u2013' -replace '−', '\u2212') | Out-File -FilePath ($definition.root.author + "; " + $definition.root.name + ".json") -Encoding UTF8
 Write-Host " Done.`n`n"
 
-Read-Host "Press Enter to exit"
+if ((Read-Host "Save log to file? (Y/N)")[0] -eq "Y") {
+	Start-Transcript -Path ("log-" + ($path -replace '^temp-') + ".txt")
+}
 
 Remove-Item $path -Recurse
