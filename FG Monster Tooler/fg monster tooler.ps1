@@ -243,7 +243,7 @@ function Tag-Entries { # Be careful editing; this catches almost everything I've
                 -replace '(?<!@d(amage|ice)) (\d+d[\dd \+\-×x\*÷/]*\d)\b(?!\})', ' {@dice $2}' `
                 -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier|bonus))', '{@hit $1}' `
                 -creplace '\bDC ?(\d+)\b', '{@dc $1}' `
-                -replace "(?<=\b(be(comes?)?|is( ?n[o']t)?|while|a(lso|nd)?|or|th(e|at)) )(blinded|charmed|deafened|frightened|grappled|in(capacitated|nvisible)|p(aralyz|etrifi|oison)ed|restrained|stunned|unconscious)\b", '{@condition $6}' `
+                -replace "(?<=\b(be(comes?)?|is( ?n[o']t)?|while|a(nd?|lso)?|or|th(e|at)) )(blinded|charmed|deafened|frightened|grappled|in(capacitated|nvisible)|p(aralyz|etrifi|oison)ed|restrained|stunned|unconscious)\b", '{@condition $6}' `
                 -replace "(?<=\b(knocked|pushed|shoved|becomes?|falls?|while|lands?) )(prone|unconscious)\b", '{@condition $2}' `
                 -replace "(?<=levels? of )exhaustion\b", "{@condition exhaustion}" `
                 -creplace '(?<=\()(A(thletics|crobatics|rcana|nimal Handling)|Per(ception|formance|suasion)|S(leight of Hand|tealth|urvival)|In(sight|vestigation|timidation)|Nature|Religion|Medicine|History|Deception)(?=\))', '{@skill $1}' `
@@ -893,10 +893,10 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         $monster | Add-Member -MemberType NoteProperty -Name ac -Value @(
             ($_.ac.$t + " " + $_.actext.$t) -split '(?<!\([^\)]+), (?![^\(]+\))' -split '(?<=\d.+) (\(\d+ .+\))' -ne "" | ForEach-Object {
                 if ($_ -match '^\d+$') {
-                    [int]$_
+                    [UInt16]$_
                 } else {
                     $ac = [PSCustomObject]@{
-                        ac = [int]($_ -replace '^\(?(\d+)\b.*$', '$1')
+                        ac = [UInt16]($_ -replace '^\(?(\d+)\b.*$', '$1')
                     }
                     if ($_ -match '\(\D+\)') {
                         $ac | Add-Member -MemberType NoteProperty -Name from -Value @(
@@ -1020,12 +1020,12 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
             }
         )
     } else {
-        $monster | Add-Member -MemberType NoteProperty -Name ac -Value @($_.ac.$t)
+        $monster | Add-Member -MemberType NoteProperty -Name ac -Value @([UInt16]$_.ac.$t)
     }
 
     # HP
     $monster | Add-Member -MemberType NoteProperty -Name hp -Value @{
-        average = [int]$_.hp.$t
+        average = [UInt16]$_.hp.$t
         formula = $_.hd.$t -replace '^\(' -replace '\)$'
     }
 
@@ -1035,54 +1035,54 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         '^(?<walk>\d+) ?ft\.?( (?<condition>\(?.+\)?))?' {
             if ($Matches.condition) {
                 $monster.speed | Add-Member -MemberType NoteProperty -Name walk -Value ([PSCustomObject]@{
-                    number = [int]$Matches.walk
+                    number = [UInt16]$Matches.walk
                     condition = $Matches.condition
                 })
             } else {
-                $monster.speed | Add-Member -MemberType NoteProperty -Name walk -Value ([int]$Matches.walk)
+                $monster.speed | Add-Member -MemberType NoteProperty -Name walk -Value ([UInt16]$Matches.walk)
             }
         }
         '(?<!\([^\)]+)\bburrow (?<burrow>\d+) ?ft\.?( (?<condition>\(?.+\)?))?' {
             if ($Matches.condition) {
                 $monster.speed | Add-Member -MemberType NoteProperty -Name burrow -Value ([PSCustomObject]@{
-                    number = [int]$Matches.burrow
+                    number = [UInt16]$Matches.burrow
                     condition = $Matches.condition
                 })
             } else {
-                $monster.speed | Add-Member -MemberType NoteProperty -Name burrow -Value ([int]$Matches.burrow)
+                $monster.speed | Add-Member -MemberType NoteProperty -Name burrow -Value ([UInt16]$Matches.burrow)
             }
         }
         '(?<!\([^\)]+)\bclimb (?<climb>\d+) ?ft\.?( (?<condition>\(?.+\)?))?' {
             if ($Matches.condition) {
                 $monster.speed | Add-Member -MemberType NoteProperty -Name climb -Value ([PSCustomObject]@{
-                    number = [int]$Matches.climb
+                    number = [UInt16]$Matches.climb
                     condition = $Matches.condition
                 })
             } else {
-                $monster.speed | Add-Member -MemberType NoteProperty -Name climb -Value ([int]$Matches.climb)
+                $monster.speed | Add-Member -MemberType NoteProperty -Name climb -Value ([UInt16]$Matches.climb)
             }
         }
         '(?<!\([^\)]+)\bfly (?<fly>\d+) ?ft\.?( (?<condition>\(?.+\)?))?' {
             if ($Matches.condition) {
                 $monster.speed | Add-Member -MemberType NoteProperty -Name fly -Value ([PSCustomObject]@{
-                    number = [int]$Matches.fly
+                    number = [UInt16]$Matches.fly
                     condition = $Matches.condition
                 })
                 if ($Matches.condition -match '\bhover\b') {
                     $monster.speed | Add-Member -MemberType NoteProperty -Name canHover -Value $true
                 }
             } else {
-                $monster.speed | Add-Member -MemberType NoteProperty -Name fly -Value ([int]$Matches.fly)
+                $monster.speed | Add-Member -MemberType NoteProperty -Name fly -Value ([UInt16]$Matches.fly)
             }
         }
         '(?<!\([^\)]+)\bswim (?<swim>\d+) ?ft\.?( (?<condition>\(?.+\)?))?' {
             if ($Matches.condition) {
                 $monster.speed | Add-Member -MemberType NoteProperty -Name swim -Value ([PSCustomObject]@{
-                    number = [int]$Matches.swim
+                    number = [UInt16]$Matches.swim
                     condition = $Matches.condition
                 })
             } else {
-                $monster.speed | Add-Member -MemberType NoteProperty -Name swim -Value ([int]$Matches.swim)
+                $monster.speed | Add-Member -MemberType NoteProperty -Name swim -Value ([UInt16]$Matches.swim)
             }
         }
         default {
@@ -1093,12 +1093,12 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
 
     # ABILITY SCORES
     $monster | Add-Member -NotePropertyMembers ([ordered]@{
-        str = [int]$_.abilities.strength.score.$t
-        dex = [int]$_.abilities.dexterity.score.$t
-        con = [int]$_.abilities.constitution.score.$t
-        int = [int]$_.abilities.intelligence.score.$t
-        wis = [int]$_.abilities.wisdom.score.$t
-        cha = [int]$_.abilities.charisma.score.$t
+        str = [UInt16]$_.abilities.strength.score.$t
+        dex = [UInt16]$_.abilities.dexterity.score.$t
+        con = [UInt16]$_.abilities.constitution.score.$t
+        int = [UInt16]$_.abilities.intelligence.score.$t
+        wis = [UInt16]$_.abilities.wisdom.score.$t
+        cha = [UInt16]$_.abilities.charisma.score.$t
     })
 
     # SAVING THROWS
@@ -1150,7 +1150,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     # DAMAGE VULNERABILITIES
     if ($_.damagevulnerabilities) {
         $monster | Add-Member -MemberType NoteProperty -Name vulnerable -Value @(
-            $_.damagevulnerabilities.$t -split '; ' | ForEach-Object {
+            $_.damagevulnerabilities.$t -replace '\\n', ' ' -split '; ' | ForEach-Object {
                 if ($_ -notmatch '\sfrom \w+') {
                     $_ -split ', ' -split ' ?and ' -ne ""
                 } else {
@@ -1167,7 +1167,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     # DAMAGE RESISTANCES
     if ($_.damageresistances) {
         $monster | Add-Member -MemberType NoteProperty -Name resist -Value @(
-            $_.damageresistances.$t -split '; ' | ForEach-Object {
+            $_.damageresistances.$t -replace '\\n', ' ' -split '; ' | ForEach-Object {
                 if ($_ -notmatch '\sfrom \w+') {
                     $_ -split ', ' -split ' ?and ' -ne ""
                 } else {
@@ -1184,7 +1184,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     # DAMAGE IMMUNITIES
     if ($_.damageimmunities) {
         $monster | Add-Member -MemberType NoteProperty -Name immune -Value @(
-            $_.damageimmunities.$t -split '; ' | ForEach-Object {
+            $_.damageimmunities.$t -replace '\\n', ' ' -split '; ' | ForEach-Object {
                 if ($_ -notmatch '\sfrom \w+') {
                     $_ -split ', ' -split ' ?and ' -ne ""
                 } else {
@@ -1208,7 +1208,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     if ($Matches.senses) {
         $monster | Add-Member -NotePropertyMembers ([ordered]@{
             senses = @($Matches.senses -split ', ' -ne "")
-            passive = [int]$Matches.passive
+            passive = [UInt16]$Matches.passive
         })
 
         # SENSE TAGS
@@ -1222,7 +1222,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
             }
         )
     } else {
-        $monster | Add-Member -MemberType NoteProperty -Name passive -Value ([int]$Matches.passive)
+        $monster | Add-Member -MemberType NoteProperty -Name passive -Value ([UInt16]$Matches.passive)
     }
 
     # LANGUAGES
@@ -1302,159 +1302,159 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                 switch -regex ($monster.trait.name) {
                     "^aggressive\b" {
                         "Aggressive"
-                        break
+                        continue
                    }
                     "^ambush\b" {
                         "Ambusher"
-                        break
+                        continue
                     }
                     "^amorphous\b" {
                         "Amorphous"
-                        break
+                        continue
                     }
                     "^amphibious\b" {
                         "Amphibious"
-                        break
+                        continue
                     }
                     "^antimagic susceptibility\b" {
                         "Antimagic Susceptibility"
-                        break
+                        continue
                     }
                     "^brute\b" {
                         "Brute"
-                        break
+                        continue
                     }
                     "^charge\b" {
                         "Charge"
-                        break
+                        continue
                     }
                     "^damage absorption\b" {
                         "Damage Absorption"
-                        break
+                        continue
                     }
                     "^death (burst|throes)\b" {
                         "Death Burst"
-                        break
+                        continue
                     }
                     "^devil['s]{0,2} sight\b" {
                         "Devil's Sight"
-                        break
+                        continue
                     }
                     "^false appearance\b" {
                         "False Appearance"
-                        break
+                        continue
                     }
                     "^fey ancestry\b" {
                         "Fey Ancestry"
-                        break
+                        continue
                     }
                     "^flyby\b" {
                         "Flyby"
-                        break
+                        continue
                     }
                     "^hold breath\b" {
                         "Hold Breath"
-                        break
+                        continue
                     }
                     "^illumination\b" {
                         "Illumination"
-                        break
+                        continue
                     }
                     "^immutable form\b" {
                         "Immutable Form"
-                        break
+                        continue
                     }
                     "^incorporeal movement\b" {
                         "Incorporeal Movement"
-                        break
+                        continue
                     }
                     "^keen (sight|hearing|smell|senses)\b" {
                         "Keen Senses"
-                        break
+                        continue
                     }
                     "^legendary resistance\b" {
                         "Legendary Resistances"
-                        break
+                        continue
                     }
                     "^light sensitivity\b" {
                         "Light Sensitivity"
-                        break
+                        continue
                     }
                     "^magic resistance\b" {
                         "Magic Resistance"
-                        break
+                        continue
                     }
-                    "^magic weapon\b" {
+                    "^magic weapons?\b" {
                         "Magic Weapons"
-                        break
+                        continue
                     }
                     "^pack tactics\b" {
                         "Pack Tactics"
-                        break
+                        continue
                     }
                     "^pounce\b" {
                         "Pounce"
-                        break
+                        continue
                     }
                     "^rampage\b" {
                         "Rampage"
-                        break
+                        continue
                     }
                     "^reckless\b" {
                         "Reckless"
-                        break
+                        continue
                     }
                     "^regenerat(e|ion)\b" {
                         "Regeneration"
-                        break
+                        continue
                     }
                     "^rejuvenat(e|ion)\b" {
                         "Rejuvenation"
-                        break
+                        continue
                     }
                     "^shapechange\b" {
                         "Shapechanger"
-                        break
+                        continue
                     }
                     "^siege monster\b" {
                         "Siege Monster"
-                        break
+                        continue
                     }
                     "^sneak attack\b" {
                         "Sneak Attack"
-                        break
+                        continue
                     }
                     "^spell immunity\b" {
                         "Spell Immunity"
-                        break
+                        continue
                     }
                     "^spider climb\b" {
                         "Spider Climb"
-                        break
+                        continue
                     }
                     "^sunlight (hyper)?sensitivity\b" {
                         "Sunlight Sensitivity"
-                        break
+                        continue
                     }
                     "^turn(ing)? immunity\b" {
                         "Turn Immunity"
-                        break
+                        continue
                     }
                     "^turn(ing)? (defiance|resistance)\b" {
                         "Turn Resistance"
-                        break
+                        continue
                     }
                     "^undead fortitude\b" {
                         "Undead Fortitude"
-                        break
+                        continue
                     }
                     "^water breathing\b" {
                         "Water Breathing"
-                        break
+                        continue
                     }
                     "^web sense\b" {
                         "Web Sense"
-                        break
+                        continue
                     }
                     "^web walker\b" { "Web Walker" }
                 }
@@ -1652,16 +1652,16 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                 }
             }
             if ($_.desc.$t -notmatch '\\n') {
-                $spellcastingBuilder | Add-Member -MemberType NoteProperty -Name hidden -Value @("xxxERRORxxx : Condensed spellcasting block")
+                $spellcastingBuilder | Add-Member -MemberType NoteProperty -Name ritual -Value @("xxxERRORxxx : Condensed spellcasting block")
                 $status += "e"
             } else {
                 $spellcastingBuilder | Add-Member -NotePropertyMembers @{
                     spells = [PSCustomObject]::new()
                     rest = [PSCustomObject]::new()
-                    day = [PSCustomObject]::new()
+                    daily = [PSCustomObject]::new()
                     week = [PSCustomObject]::new()
                     year = [PSCustomObject]::new()
-                    hidden = [System.Collections.ArrayList]::new()
+                    ritual = [System.Collections.ArrayList]::new()
                 }
                 switch -Regex (($_.desc.$t -split '\\n') | Select-Object -Skip 1) {
                     '^at will' {
@@ -1669,13 +1669,13 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                         continue
                     }
                     '^(?<num>\d+) ?/ ?day( (?<e>e)ach)?' {
-                        $spellcastingBuilder.day | Add-Member -MemberType NoteProperty -Name ($Matches.num + $Matches.e) -Value @(Process-SpellList ($_ -replace '^\d+ ?/ ?day( each)?: '))
+                        $spellcastingBuilder.daily | Add-Member -MemberType NoteProperty -Name ($Matches.num + $Matches.e) -Value @(Process-SpellList ($_ -replace '^\d+ ?/ ?day( each)?: '))
                         continue
                     }
                     '^(?<num>\d+)\w{2}[- –—]level( \((?<slots>\d+) slots?\))?' {
                         if ($Matches.slots) {
                             $spellcastingBuilder.spells | Add-Member -MemberType NoteProperty -Name $Matches.num -Value @{
-                                slots = [int]$Matches.slots
+                                slots = [UInt16]$Matches.slots
                                 spells = @(Process-SpellList ($_ -replace '^\d+\w{2}[- –—]level( \(\d+ slots?\))?: '))
                             }
                         } else {
@@ -1685,8 +1685,8 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                         }
                         continue
                     }
-                    '^(?<num>\d+) ?/ ?rest( (?<e>e)ach)?' {
-                        $spellcastingBuilder.rest | Add-Member -MemberType NoteProperty -Name ($Matches.num + $Matches.e) -Value @(Process-SpellList ($_ -replace '^\d+ ?/ ?day( each)?: '))
+                    '^(?<num>\d+) ?/ ?((long|short)( |-))?rest( (?<e>e)ach)?' {
+                        $spellcastingBuilder.rest | Add-Member -MemberType NoteProperty -Name ($Matches.num + $Matches.e) -Value @(Process-SpellList ($_ -replace '^\d+ ?/ ?((long|short)( |-))?rest( each)?: '))
                         continue
                     }
                     '^cantrips?' {
@@ -1706,15 +1706,15 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                         continue
                     }
                     '^(?<num>\d+) ?/ ?week( (?<e>e)ach)?' {
-                        $spellcastingBuilder.week | Add-Member -MemberType NoteProperty -Name ($Matches.num + $Matches.e) -Value @(Process-SpellList ($_ -replace '^\d+ ?/ ?day( each)?: '))
+                        $spellcastingBuilder.week | Add-Member -MemberType NoteProperty -Name ($Matches.num + $Matches.e) -Value @(Process-SpellList ($_ -replace '^\d+ ?/ ?week( each)?: '))
                         continue
                     }
                     '^(?<num>\d+) ?/ ?year( (?<e>e)ach)?' {
-                        $spellcastingBuilder.year | Add-Member -MemberType NoteProperty -Name ($Matches.num + $Matches.e) -Value @(Process-SpellList ($_ -replace '^\d+ ?/ ?day( each)?: '))
+                        $spellcastingBuilder.year | Add-Member -MemberType NoteProperty -Name ($Matches.num + $Matches.e) -Value @(Process-SpellList ($_ -replace '^\d+ ?/ ?year( each)?: '))
                     }
                     '^\* ?\w+\b' { $monster.spellcasting | Add-Member -MemberType NoteProperty -Name footerEntries -Value @($_) }
                     default {
-                        $spellcastingBuilder.hidden += "xxxERRORxxx : Uninterpretable spellcasting line = ``$_``"
+                        $null = $spellcastingBuilder.ritual.Add("xxxERRORxxx : Uninterpretable spellcasting line = ``$_``")
                         $status += "e"
                     }
                 }
@@ -1724,8 +1724,8 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                 if (-not $spellcastingBuilder.rest.PSObject.Properties.Name) {
                     $spellcastingBuilder.PSObject.Properties.Remove('rest')
                 }
-                if (-not $spellcastingBuilder.day.PSObject.Properties.Name) {
-                    $spellcastingBuilder.PSObject.Properties.Remove('day')
+                if (-not $spellcastingBuilder.daily.PSObject.Properties.Name) {
+                    $spellcastingBuilder.PSObject.Properties.Remove('daily')
                 }
                 if (-not $spellcastingBuilder.week.PSObject.Properties.Name) {
                     $spellcastingBuilder.PSObject.Properties.Remove('week')
@@ -1733,8 +1733,8 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                 if (-not $spellcastingBuilder.year.PSObject.Properties.Name) {
                     $spellcastingBuilder.PSObject.Properties.Remove('year')
                 }
-                if (-not $spellcastingBuilder.hidden) {
-                    $spellcastingBuilder.PSObject.Properties.Remove('hidden')
+                if (-not $spellcastingBuilder.ritual) {
+                    $spellcastingBuilder.PSObject.Properties.Remove('ritual')
                 }
             }
             $null = $monster.spellcasting.Add($spellcastingBuilder)
@@ -1806,12 +1806,12 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                 $monster | Add-Member -MemberType NoteProperty -Name legendaryHeader -Value @(Format-Entries @($_.legendaryactions.FirstChild.desc))
             }
             if ($Matches.num -ne 3) {
-                $monster| Add-Member -MemberType NoteProperty -Name legendaryActions -Value ([int]$Matches.num)
+                $monster| Add-Member -MemberType NoteProperty -Name legendaryActions -Value ([UInt16]$Matches.num)
             }
         } else {
             $monster | Add-Member -MemberType NoteProperty -Name legendaryHeader -Value @(Format-Entries @($_.legendaryactions.FirstChild.desc))
             if ($monster.legendaryHeader -match '\b(?<num>d+) legendary actions?\b') {
-                $monster | Add-Member -MemberType NoteProperty -Name legendaryActions -Value ([int]$Matches.num)
+                $monster | Add-Member -MemberType NoteProperty -Name legendaryActions -Value ([UInt16]$Matches.num)
             }
         }
         $monster | Add-Member -MemberType NoteProperty -Name legendary -Value ([System.Collections.ArrayList]::new())
