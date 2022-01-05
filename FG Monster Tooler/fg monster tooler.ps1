@@ -1827,8 +1827,14 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         # Mythic actions would go here but I don't know how FG formats them ¯\_(ツ)_/¯
     }
 
-    # LAIR ACTIONS
+    # LEGENDARY GROUP
     if ($_.lairactions -or $_.text.InnerText -cmatch 'Regional Effects') {
+        $monster | Add-Member -MemberType NoteProperty -Name legendaryGroup -Value ([ordered]@{
+            name = $monster.name
+            source = $source
+        })
+
+        # LAIR ACTIONS
         $legendaryGroup = [PSCustomObject]@{
             source = $source
             name = $monster.name
@@ -1844,8 +1850,8 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         # CONDITIONS INFLICTED BY LAIR ACTIONS/REGIONAL EFFECTS
         $monster | Add-Member -MemberType NoteProperty -Name conditionInflictLegendary -Value ([System.Collections.ArrayList]::new())
         if ($legendaryGroup.lairActions) {
-            $null = $damageTags.AddRange(@(Enumerate-DamageTypes $legendaryGroup.lairActions[1].items))
-            $null = $monster.conditionInflictLegendary.AddRange(@(Enumerate-Conditions $legendaryGroup.lairActions[1].items))
+            $null = $damageTags.AddRange(@(Enumerate-DamageTypes $legendaryGroup.lairActions[1].items -replace '\{@h\}', 'Hit: ' -replace '\{@\w+ (.+?)(\|.+?)?\}', '$1'))
+            $null = $monster.conditionInflictLegendary.AddRange(@(Enumerate-Conditions $legendaryGroup.lairActions[1].items -replace '\{@\w+ (.+?)(\|.+?)?\}', '$1'))
         } else {
             $legendaryGroup.PSObject.Properties.Remove('lairActions')
         }
@@ -1862,7 +1868,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                     (Tag-Entries $_.text.ChildNodes.InnerText.Where({$_ -eq 'Regional Effects'},'SkipUntil')[-1])
                 )
             )
-            $null = $monster.conditionInflictLegendary.AddRange(@(Enumerate-Conditions $legendaryGroup.regionalEffects[1].items))
+            $null = $monster.conditionInflictLegendary.AddRange(@(Enumerate-Conditions $legendaryGroup.regionalEffects[1].items -replace '\{@\w+ (.+?)(\|.+?)?\}', '$1'))
         }
 
         if ($monster.conditionInflictLegendary) {
