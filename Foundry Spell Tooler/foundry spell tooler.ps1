@@ -14,20 +14,20 @@ $extractPageNumbers = $false <# Set to $false if page numbers aren't included in
                                 some such. #>
 
 <# ABOUT
-  This script converts spells from a Foundry VTT dnd5e compendium file to 5etools' home-
-   brew schema. This script is designed to automate the *bulk* process, and it will
+  This script converts spells from a Foundry VTT `dnd5e` compendium file to 5etools'
+   homebrew schema. This script is designed to automate the *bulk* process, and it will
    almost certainly require manual correction afterwards (see below).
 
 # HOW TO USE
   Place this file in the same directory as your compendium file (e.g. `spells.db`). On
-   Windows, right-click this script and select 'Run'. On macOS and Linux, you will
-   probably have to install Powershell and run it via command line.
+   Windows, right-click this script and select 'Run with PowerShell'. On macOS and Linux,
+   you will probably have to install PowerShell and run it via command line.
 
   A file named '# BREW.json' will be created in this same directory. Make corrections as
    appropriate and you should be sorted!
 
-  Knowledge of the 5etools' schema is strongly advised. Proficiency in basic regex is
-   very helpful for clean-up!
+  Knowledge of 5etools' schema is strongly advised. Proficiency in basic regex is very
+   helpful for clean-up!
 
 # LIMITATIONS
   You should be aware of the following limitations with this automated conversion.

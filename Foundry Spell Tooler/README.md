@@ -1,14 +1,14 @@
 # Foundry Spell Tooler
 
 ### About
-This script converts spells from [Foundry VTT](https://foundryvtt.com/) [`dnd5e`](https://gitlab.com/foundrynet/dnd5e) compendia to the [5etools' homebrew](https://github.com/TheGiddyLimit/homebrew) schema. This script is designed to automate the *bulk* process, and it will almost certainly require manual correction afterwards (see below).
+This script converts spells from [Foundry VTT](https://foundryvtt.com/) [`dnd5e`](https://gitlab.com/foundrynet/dnd5e) compendia to [5etools' homebrew](https://github.com/TheGiddyLimit/homebrew) schema. This script is designed to automate the *bulk* process, and it will almost certainly require manual correction afterwards (see below).
 
 ### How to use
-Place this file in the same directory as your compendium file (e.g. `spells.db`). On Windows, right-click this script and select 'Run'. On Mac OS and Linux, you will probably have to install [Powershell](https://github.com/powershell/powershell) and run it via command line.
+Place this file in the same directory as your compendium file (e.g. `spells.db`). On Windows, right-click this script and select 'Run with PowerShell'. On Mac OS and Linux, you will probably have to install [PowerShell](https://github.com/powershell/powershell) and run it via command line.
 
 A file named `# BREW.json` will be created in this same directory. Make corrections as appropriate and you should be sorted!
 
-Knowledge of the [5etools' schema](https://github.com/TheGiddyLimit/TheGiddyLimit.github.io/tree/master/test/schema) is strongly advised. Proficiency in basic regex is very helpful for clean-up!
+Knowledge of [5etools' schema](https://github.com/TheGiddyLimit/TheGiddyLimit.github.io/tree/master/test/schema) is strongly advised. Proficiency in basic regex is very helpful for clean-up!
 
 ### Settings
 The following settings can (and should) be set by editing the script. They're found at the top.

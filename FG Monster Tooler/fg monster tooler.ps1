@@ -14,7 +14,7 @@ $abbreviation = "MME3"
     <# Abbreviation string. Set to "" or $false instead generate an abbreviation string
         from the brew's name. #>
 $url = "https://www.dmsguild.com/product/365853/Monster-Manual-Expanded-III-5E"
-    <# Link to one of the brew's official stores or place or publication. Set to "" or
+    <# Link to one of the brew's official stores or place of publication. Set to "" or
         $false to ignore. #>
 $colour = "BD7044"
     <# Colour the brew can be identified as on 5etools, as a standard 6-digit RGB hexa-
@@ -46,22 +46,91 @@ $spellcastingActions = $true
     (search for 'SPELLCASTING'). A bunch of extra processing stuff is currently commented
     out for efficiency. #>
 
-<#limitations
-- complex alignments (e.g. with chances)
-- prefix tags (e.g. 'Illuskan human')
-- certain complex AC conditionals
-- special HPs without averages/formulae
-- certain complex, non-standard damage vulnerability/resistance/immunity formats
-- condition immunities with conditionals
-- won't match many OTH languageTags
-- will accept invalid CRs but won't warn you about them (don't know how FG handles e.g. lair CRs)
-- spellcasting in FG appaers to be always in traits, contrary to new style
-- assumes standard formatting in lair actions and regional effects
+<# ABOUT
+  This script converts monsters from a Fantasy Grounds `.mod` file to 5etools' homebrew
+   schema. This script is designed to automate the *bulk* process, and it will almost
+   certainly require manual correction afterwards (see below).
 
-- bonus actions don't exist; recognising them is iffy
-- environments don't exist
-- page numbers don't exist
-- no mythic actions
+# HOW TO USE
+  Place this script in the same directory as your `.mod` file. On Windows, right-click
+   this script and select 'Run with PowerShell'. On macOS and Linux, you'll probably have
+   to install PowerShell and run it via command line.
+
+  A file following 5etools' homebrew filename convention ('Author; Homebrew Title.json')
+   will be created in this same directory. Make corrections as appropriate and you should
+   be sorted!
+
+  Knowledge of 5etools is strongly advised. Proficiency in basic regex is very helpful for
+   clean-up!
+
+# LIMITATIONS
+  You should be aware of the following limitations with this automated conversion.
+   - Complex alignments are not handled (e.g. "50% Lawful Good, 50% Chaotic Evil").
+   - `prefix` tags (e.g. "Illuskan human").
+   - `special` HP maxima, which lack an average or formula.
+   - Certain complex, conditional ACs may be malformed.
+   - Certain complex, non-standard damage vulnerability/resistance/immunity formats
+   - Condition immunities with embedded conditions (e.g. "poisoned (while in Angry Form)")
+   - `languageTags` will not be populated with `OTH`
+   - Invalid CRs may be accepted, but this script won't warn you about them (I don't know
+      how FG handles, for example, lair CRs).
+   - Lair actions and regional effects are assumed to follow standard formatting and will
+      not tolerate any real deviation from the norm.
+   - Lair actions and regional effects are always formatted in the old bulleted-list style
+      rather than the new `list-hang-notitle` style. Feel free to raise an issue if this
+      matters for you.
+   - Spellcasting actions are messy; see above for more information.
+   - Bonus actions may appear (with slightly modified text) as normal actions; see above
+      for more information.
+
+  If something goes wrong, either an `xxxERRORxxx : <error message>` string will be put in
+   the appropriate JSON attribute, or the script will crash. Good luck!
+
+  Fantasy Grounds doesn't store everything that 5etools does. The following will always
+   require manual entry:
+   - `page` number (set to `0` by default)
+   - `environment`s
+   - `isNpc` flag
+   - `familiar` flag
+   - `group`s and search `alias`es
+   - `soundClip`
+   - `dragonCastingColour` (lmao)
+   - `dragonAge`
+   - `variant` footers or inserts (these will often be stored in the `fluff`)
+
+  Although this script tries to automatically match taggable strings, it is far from
+   perfect. After addressing the errors, you should verify that filter arrays (e.g.
+   `miscTags`, `conditionInflict`) are accurate, and then tag anything relevant in the
+   `entries` arrays.
+
+# CONTACT
+  - spap [has#] 9812
+  - spappz [@t] fire mail [d.t] cc
+
+  pls no spam
+
+# LICENSE
+  MIT License
+
+  Copyright © 2022 Spappz
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this
+   software and associated documentation files (the "Software"), to deal in the Software
+   without restriction, including without limitation the rights to use, copy, modify,
+   merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to the following
+   conditions:
+
+  The above copyright notice and this permission notice shall be included in all copies
+   or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+   INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+   PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+   CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+   OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 #>
 
 # INITIALISATION
@@ -1901,8 +1970,8 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     # TOKEN
     if ($addTokens -and $_.token.$t -match '\.\w+(?!@DD5E SRD Bestiary)$') {
         try {
-            Copy-Item ($path + "\" + ($_.token.$t -replace '@.*$')) ($imagePath + "\creature\" + $monster.name + " (Token)" + ($_.token.$t -replace '^.*(?=\.\w{2,6}$)')) -ErrorAction Stop
-            $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value ("$repo/$source/creature/" + $monster.name + " (Token)" + ($_.token.$t -replace '^.*(?=\.\w{2,6}$)'))
+            Copy-Item ($path + "\" + ($_.token.$t -replace '@.*$')) ($imagePath + "\creature\token\" + $monster.name + " (Token)" + ($_.token.$t -replace '^.*(?=\.\w{2,6}$)')) -ErrorAction Stop
+            $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value ("$repo/$source/creature/token/" + $monster.name + " (Token)" + ($_.token.$t -replace '^.*(?=\.\w{2,6}$)'))
         } catch {
             $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value "xxxERRORxxx : Could not find image"
             $status += "e"

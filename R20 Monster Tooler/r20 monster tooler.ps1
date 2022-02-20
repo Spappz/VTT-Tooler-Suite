@@ -51,20 +51,20 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
 
   Roll20 doesn't store everything that 5etools does. The following always requires
    manual entry:
-   - page number (0 by default)
-   - environments
+   - `page` number (set to `0` by default)
+   - `environment`s
    - `isNpc` flag
    - `familiar` flag
-   - groups and search aliases
-   - sound clips
-   - dragon casting colour (lmao)
-   - variant footers/insets (these will often be stored in the `fluff`)
-   - the source on any `{@tag ...}` (will be left blank)
+   - `group`s and search `alias`es
+   - `soundClip`
+   - `dragonCastingColor` (lmao)
+   - `dragonAge`
+   - `variant` footers or inserts (these will often be stored in the `fluff`)
 
   Although this script tries to automatically match taggable strings, it is far from
    perfect. After addressing the errors, you should verify that filter arrays (e.g.
    `miscTags`, `conditionInflict`) are accurate, and tag anything relevant in `entries`
-   arrays.
+   arrays. Note that the source on any `@tag` will be left blank.
 
   Also this handles lists and tables terribly. If you see random italics or `<li>` tags
    everywhere, it's likely meant to be one of those.
