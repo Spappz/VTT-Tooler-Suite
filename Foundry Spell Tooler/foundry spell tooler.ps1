@@ -93,7 +93,7 @@ function Tag-Entries {
             -replace '(?<=\brolls? (a )?)(d\d+)\b(?!\})', '{@dice $2}' `
             -replace '(?<!@d(amage|ice)) (\d+d[\dd \+\-×x\*÷/]*\d)\b(?!\})', ' {@dice $2}' `
             -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier|bonus))', '{@hit $1}' `
-            -replace "(?<=\b(be(comes?)?|is|while|a(lso|nd)?|or|th(e|at)) )(blinded|charmed|deafened|frightened|grappled|incapacitated|invisible|paralyzed|petrified|poisoned|restrained|stunned)\b", '{@condition $5}' `
+            -replace "(?<=\b(be(comes?)?|is( ?n['o]t)?|while|a(lso|nd|( ?n['o]t))?|or|th(e|at)) )(blinded|charmed|deafened|frightened|grappled|incapacitated|invisible|paralyzed|petrified|poisoned|restrained|stunned)\b", '{@condition $7}' `
             -replace "(?<=\b(knocked|pushed|shoved|becomes?|falls?|while|lands?) )(prone|unconscious)\b", '{@condition $2}' `
             -replace "(?<=levels? of )exhaustion\b", "{@condition exhaustion}" `
             -creplace '(?<=\()(Athletics|Acrobatics|Sleight of Hand|Stealth|Arcana|History|Investigation|Nature|Religion|Animal Handling|Insight|Medicine|Perception|Survival|Deception|Intimidation|Performance|Persuasion)(?=\))', '{@skill $1}' `
@@ -233,14 +233,14 @@ function Find-DamageType {
     }
     PROCESS {
         switch -regex ($str) {
-            "\btak\w{1,3} [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b" { $finds += $matches.type }
-            '\bdeal\w{0,3} [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $matches.type }
-            '\binflict\w{0,3} [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $matches.type }
-            '\bsuffer\w{0,3} [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $matches.type }
-            '\bfor [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $matches.type }
-            '\bplus [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $matches.type }
-            '\band [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $matches.type }
-            '\bor \w{4,} damage' { $finds += $matches.type }
+            "\btak\w{1,3} [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b" { $finds += $Matches.type }
+            '\bdeal\w{0,3} [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $Matches.type }
+            '\binflict\w{0,3} [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $Matches.type }
+            '\bsuffer\w{0,3} [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $Matches.type }
+            '\bfor [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $Matches.type }
+            '\bplus [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $Matches.type }
+            '\band [\{\}@diceamg \d\+\-\*×÷/\^\(\)]+? (?<type>\w{4,}) damage\b' { $finds += $Matches.type }
+            '\bor \w{4,} damage' { $finds += $Matches.type }
         }
         switch -exact ($finds) {
             acid { $confirms += "A" }
@@ -672,11 +672,40 @@ $foundry | ForEach-Object -Begin {
                 }
             }
         ))
-    } 
+    }
 
     $abilityCheck = ,$entries.entries | Find-AbilityCheck
     if ($abilityCheck) {
         $5et | Add-Member -MemberType NoteProperty -Name abilityCheck -Value @($abilityCheck)
+    }
+
+    foreach ($entry in $entries.entries) {
+        if (
+            $entry -match '\b(?<creatures>((aberration|beast|celestial|construct|dragon|elemental|fiend|giant|humanoid|ooze|plant)s?\b|fey\b|undead\b|monstrosit(y|ies)\b|, | ?\b(and|or) (an? )?)+)(?=( creatures?)? (is|are) ?((n[o'']t |un)affected|immune))' `
+            -or $entry -match '(?<=spell (ha|doe)s ?n[o''t]{1,2} [ae]ffect (on )?)(?<creatures>((aberration|beast|celestial|construct|dragon|elemental|fiend|giant|humanoid|ooze|plant)s?\b|fey\b|undead\b|monstrosit(y|ies)\b|, | ?\b(and|or) (an? )?)+)\b'
+        ) {
+            $notAffectsCreatureType = $Matches.creatures -split ', ' -split ' ?(a(nd?)?|or) ', 0, "ExplicitCapture" -ne "" -replace 's$' -replace 'ie$', 'y'
+            $affectsCreatureType = @(
+                "aberration",
+                "beast",
+                "celestial",
+                "construct",
+                "dragon",
+                "elemental",
+                "fey",
+                "fiend",
+                "giant",
+                "humanoid",
+                "monstrosity",
+                "ooze",
+                "plant",
+                "undead"
+            ) | Where-Object { $_ -notin $notAffectsCreatureType }
+            if ($affectsCreatureType.Count -lt 14) {
+                $5et | Add-Member -MemberType NoteProperty -Name affectsCreatureType -Value @($affectsCreatureType)
+            }
+            break
+        }
     }
 
     $miscTags = [System.Collections.ArrayList]::new()
@@ -698,7 +727,7 @@ $foundry | ForEach-Object -Begin {
     if ($entries.entries -match '\byou can see\b(?! in)') {
         $miscTags += "SGT"
     }
-    if ($_.name -match '^summon' -or $_.name -match '^conjure') {
+    if ($_.name -match '^summon\b' -or $_.name -match '^conjure\b') {
         $miscTags += "SMN"
     }
     if ($_.data.damage.parts -match "temphp" -or $entries.entries -match '\b((re)?gain|restore|heal|grant)s? ([d\d\+-×÷ ]+|a number of) temp(orary|\.)? h(it )?p(oints?)' -or $entries.entries -match '\b((re)?gain|restore|heal|grant)s? temp(orary|\.)? h(it )?p(oints?) (equal|up) to') {
@@ -744,8 +773,8 @@ Write-Output $("`n`n`nCompleted conversion of " + $progmax + " spells with " + $
 Write-Host "`nExporting file..." -NoNewLine 
 (($brew | ConvertTo-Json -Depth 15 -Compress | ForEach-Object {
     [Regex]::Replace($_, "\\u(?<Value>\w{4})", {
-        param($matches)
-        ([char]([int]::Parse($matches.Groups['Value'].Value, [System.Globalization.NumberStyles]::HexNumber))).ToString()
+        param($Matches)
+        ([char]([int]::Parse($Matches.Groups['Value'].Value, [System.Globalization.NumberStyles]::HexNumber))).ToString()
     })
 }) -replace '(“|”)', '\"' -replace '—', '\u2014' -replace '–', '\u2013') | Out-File -FilePath ".\# BREW.json" -Encoding UTF8
 Write-Host " Done.`n`n"
