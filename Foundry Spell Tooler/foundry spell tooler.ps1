@@ -427,7 +427,7 @@ $foundry | ForEach-Object -Begin {
 
     $5et | Add-Member -MemberType NoteProperty -Name time -Value @(
         [PSCustomObject]@{
-            number = $_.data.activation.cost
+            number = [UInt16]$_.data.activation.cost
             unit = $_.data.activation.type
         }
     )
