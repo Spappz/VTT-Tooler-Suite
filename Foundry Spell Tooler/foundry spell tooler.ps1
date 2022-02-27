@@ -92,7 +92,7 @@ function Tag-Entries {
             -replace '\b(\d+d[\dd \+\-×x\*÷/]*\d)(?=( (\w){4,9})? damage\b)(?!\})', '{@damage $1}' `
             -replace '(?<=\brolls? (a )?)(d\d+)\b(?!\})', '{@dice $2}' `
             -replace '(?<!@d(amage|ice)) (\d+d[\dd \+\-×x\*÷/]*\d)\b(?!\})', ' {@dice $2}' `
-            -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier|bonus))', '{@hit $1}' `
+            -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier))', '{@hit $1}' `
             -replace "(?<=\b(be(comes?)?|is( ?n['o]t)?|while|a(lso|nd|( ?n['o]t))?|or|th(e|at)) )(blinded|charmed|deafened|frightened|grappled|incapacitated|invisible|paralyzed|petrified|poisoned|restrained|stunned)\b", '{@condition $7}' `
             -replace "(?<=\b(knocked|pushed|shoved|becomes?|falls?|while|lands?) )(prone|unconscious)\b", '{@condition $2}' `
             -replace "(?<=levels? of )exhaustion\b", "{@condition exhaustion}" `
@@ -681,10 +681,16 @@ $foundry | ForEach-Object -Begin {
 
     foreach ($entry in $entries.entries) {
         if (
+            $entry -match '(?<=(choose|touch|each) ((an?|((up to )?(\d+|one|t(wo|hree)|f(our|ive)|six))) )?)(?<creatures>((aberration|beast|celestial|construct|dragon|elemental|fiend|giant|humanoid|ooze|plant)s?\b|fey\b|undead\b|monstrosit(y|ies)\b|, | ?\b(and|or) (an? )?)+)'
+        ) {
+            $5et | Add-Member -MemberType NoteProperty -Name affectsCreatureType -Value @(
+                $Matches.creatures -split ', ' -split ' ?(a(nd?)?|or) ', 0, "ExplicitCapture" -ne "" -replace 's$' -replace 'ie$', 'y'
+            )
+            break
+        } elseif (
             $entry -match '\b(?<creatures>((aberration|beast|celestial|construct|dragon|elemental|fiend|giant|humanoid|ooze|plant)s?\b|fey\b|undead\b|monstrosit(y|ies)\b|, | ?\b(and|or) (an? )?)+)(?=( creatures?)? (is|are) ?((n[o'']t |un)affected|immune))' `
             -or $entry -match '(?<=spell (ha|doe)s ?n[o''t]{1,2} [ae]ffect (on )?)(?<creatures>((aberration|beast|celestial|construct|dragon|elemental|fiend|giant|humanoid|ooze|plant)s?\b|fey\b|undead\b|monstrosit(y|ies)\b|, | ?\b(and|or) (an? )?)+)\b'
         ) {
-            $notAffectsCreatureType = $Matches.creatures -split ', ' -split ' ?(a(nd?)?|or) ', 0, "ExplicitCapture" -ne "" -replace 's$' -replace 'ie$', 'y'
             $affectsCreatureType = @(
                 "aberration",
                 "beast",
@@ -700,7 +706,9 @@ $foundry | ForEach-Object -Begin {
                 "ooze",
                 "plant",
                 "undead"
-            ) | Where-Object { $_ -notin $notAffectsCreatureType }
+            ) | Where-Object {
+                $_ -notin ($Matches.creatures -split ', ' -split ' ?(a(nd?)?|or) ', 0, "ExplicitCapture" -ne "" -replace 's$' -replace 'ie$', 'y')
+            }
             if ($affectsCreatureType.Count -lt 14) {
                 $5et | Add-Member -MemberType NoteProperty -Name affectsCreatureType -Value @($affectsCreatureType)
             }

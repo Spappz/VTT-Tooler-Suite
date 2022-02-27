@@ -15,7 +15,7 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
 
 <#
 # ABOUT
-  This script converts monsters from Kakaroto's R20Exporter JSON to 5etools' homebrew
+  This script converts monsters from KaKaRoTo's R20Exporter JSON to 5etools' homebrew
    schema. This script is designed to automate the *bulk* process, and it will almost
    certainly require manual correction afterwards (see below).
 
@@ -284,7 +284,7 @@ function Tag-Entries {
             -replace '(?<=\brolls? a )(d\d+)\b(?!\})', '{@dice $1}' `
             -replace '(?<!@d(amage|ice)) (\d+d[\dd \+\-×x\*÷/]*\d)\b(?!\})', ' {@dice $2}' `
             -creplace '\bDC ?(\d+)\b', '{@dc $1}' `
-            -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier|bonus))', '{@hit $1}' `
+            -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier))', '{@hit $1}' `
             -replace "(?<=\b(be(comes?)?|is|while|a(lso|nd)?|or|the) )(blinded|charmed|deafened|frightened|grappled|incapacitated|invisible|paralyzed|petrified|poisoned|restrained|stunned)\b", '{@condition $4}' `
             -replace "(?<=\b(knocked|pushed|shoved|becomes?|falls?|while|lands?) )(prone|unconscious)\b", '{@condition $2}' `
             -replace "(?<=levels? of )exhaustion\b", "{@condition exhaustion}" `

@@ -1,7 +1,7 @@
 # R20 Monster Tooler
 
 ### About
-This script converts monsters from [Kakaroto's R20Exporter](https://github.com/kakaroto/R20Exporter/) JSON to [5etools' homebrew](https://github.com/TheGiddyLimit/homebrew) schema. This script is designed to automate the *bulk* process, and it will almost certainly require manual correction afterwards (see below).
+This script converts monsters from [KaKaRoTo's R20Exporter](https://github.com/kakaroto/R20Exporter/) JSON to [5etools' homebrew](https://github.com/TheGiddyLimit/homebrew) schema. This script is designed to automate the *bulk* process, and it will almost certainly require manual correction afterwards (see below).
 
 ### How to use
 Place this file in the same directory as the 'characters' directory, which you should acquire by running [R20Exporter](https://github.com/kakaroto/R20Exporter/). On Windows, right-click this script and select 'Run'. On Mac OS and Linux, you will probably have to install [Powershell](https://github.com/powershell/powershell) and run it via command line.

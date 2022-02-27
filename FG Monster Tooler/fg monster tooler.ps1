@@ -310,7 +310,7 @@ function Tag-Entries { # Be careful editing; this catches almost everything I've
                 -replace '\b(\d+d[\dd \+\-×x\*÷/]*\d)(?=( (\w){4,11})? damage\b)', '{@damage $1}' `
                 -replace '(?<=\brolls? (a )?)(d\d+)\b(?!\})', '{@dice $2}' `
                 -replace '(?<!@d(amage|ice)) (\d+d[\dd \+\-×x\*÷/]*\d)\b(?!\})', ' {@dice $2}' `
-                -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier|bonus))', '{@hit $1}' `
+                -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier))', '{@hit $1}' `
                 -creplace '\bDC ?(\d+)\b', '{@dc $1}' `
                 -replace "(?<=\b(be(comes?)?|is( ?n[o']t)?|while|a(nd?|lso)?|or|th(e|at)) )(blinded|charmed|deafened|frightened|grappled|in(capacitated|nvisible)|p(aralyz|etrifi|oison)ed|restrained|stunned|unconscious)\b", '{@condition $6}' `
                 -replace "(?<=\b(knocked|pushed|shoved|becomes?|falls?|while|lands?) )(prone|unconscious)\b", '{@condition $2}' `
