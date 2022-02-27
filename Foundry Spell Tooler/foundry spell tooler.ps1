@@ -691,27 +691,26 @@ $foundry | ForEach-Object -Begin {
             $entry -match '\b(?<creatures>((aberration|beast|celestial|construct|dragon|elemental|fiend|giant|humanoid|ooze|plant)s?\b|fey\b|undead\b|monstrosit(y|ies)\b|, | ?\b(and|or) (an? )?)+)(?=( creatures?)? (is|are) ?((n[o'']t |un)affected|immune))' `
             -or $entry -match '(?<=spell (ha|doe)s ?n[o''t]{1,2} [ae]ffect (on )?)(?<creatures>((aberration|beast|celestial|construct|dragon|elemental|fiend|giant|humanoid|ooze|plant)s?\b|fey\b|undead\b|monstrosit(y|ies)\b|, | ?\b(and|or) (an? )?)+)\b'
         ) {
-            $affectsCreatureType = @(
-                "aberration",
-                "beast",
-                "celestial",
-                "construct",
-                "dragon",
-                "elemental",
-                "fey",
-                "fiend",
-                "giant",
-                "humanoid",
-                "monstrosity",
-                "ooze",
-                "plant",
-                "undead"
-            ) | Where-Object {
-                $_ -notin ($Matches.creatures -split ', ' -split ' ?(a(nd?)?|or) ', 0, "ExplicitCapture" -ne "" -replace 's$' -replace 'ie$', 'y')
-            }
-            if ($affectsCreatureType.Count -lt 14) {
-                $5et | Add-Member -MemberType NoteProperty -Name affectsCreatureType -Value @($affectsCreatureType)
-            }
+            $5et | Add-Member -MemberType NoteProperty -Name affectsCreatureType -Value (
+                @(
+                    "aberration",
+                    "beast",
+                    "celestial",
+                    "construct",
+                    "dragon",
+                    "elemental",
+                    "fey",
+                    "fiend",
+                    "giant",
+                    "humanoid",
+                    "monstrosity",
+                    "ooze",
+                    "plant",
+                    "undead"
+                ) | Where-Object {
+                    $_ -notin ($Matches.creatures -split ', ' -split ' ?(a(nd?)?|or) ', 0, "ExplicitCapture" -ne "" -replace 's$' -replace 'ie$', 'y')
+                }
+            )
             break
         }
     }
