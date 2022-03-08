@@ -285,7 +285,7 @@ function Find-Condition {
             "(?<!(against( being)?|or|n('|o)t( be)?)) \{@condition res" { $finds += "restrained" }
             "(?<!(against( being)?|or|n('|o)t( be)?)) \{@condition stu" { $finds += "stunned" }
             "(?<!(against( being)?|or|n('|o)t( be)?)) (knocked|pushed|shoved|becomes|falls) \{@condition pro" { $finds += "prone" }
-            "(?<!(against( being)?|or|n('|o)t( be)?)) (knocked|pushed|shoved|becomes|falls) \{@condition unc" { $finds += "unconscious" }
+            "(?<!(against( being)?|or|n('|o)t( be)?)) (knocked|becomes|falls) \{@condition unc" { $finds += "unconscious" }
         }
         Write-Output @($finds | Sort-Object -Unique)
     }

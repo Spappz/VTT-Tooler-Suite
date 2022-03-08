@@ -23,6 +23,8 @@ The following settings can (and should) be set by editing the script. They're fo
 - `$spellcastingActions` (bool), when `$true`, tells the script to treat all "Spellcasting" (and related) traits in the `.mod` as actions, following the newer 'spellcasting actions' standard WotC are using
 
 ### Limitations
+**Forewarning:** I have seen a number of `.mod`s that flat-out ignore data fields and inconsistently format things as raw text, which almost undoubtedly produces errors. Nothing I can do here; take it up with the author(s).
+
 You should be aware of the following limitations with this automated conversion; there's a lot of edge cases and variation that's hard to foresee.
 - Alignment descriptions that aren't either exact or in the form of "any (non-)**alignment**" (e.g. "50% Lawful Good, 50% Chaotic Evil"). `alignmentPrefix`es that aren't `typically ` will also be missed.
 - `prefix` tags (e.g. "**Illuskan** human").
@@ -49,10 +51,7 @@ Fantasy Grounds doesn't store everything that 5etools does. The following will a
    - `dragonAge` (feel free to [raise an issue](https://github.com/Spappz/VTT-Tooler-Suite/issues/new) if this matters for you)
    - `variant` footers or inserts (these will often be stored in the `fluff`)
 
-  Although this script tries to automatically match taggable strings, it is far from
-   perfect. After addressing the errors, you should verify that filter arrays (e.g.
-   `miscTags`, `conditionInflict`) are accurate, and then tag anything relevant in the
-   `entries` arrays.
+Although this script tries to automatically match taggable strings, it is far from perfect. After addressing the errors, you should verify that filter arrays (e.g. `miscTags`, `conditionInflict`) are accurate, and then tag anything relevant in the `entries` arrays.
 
 If something goes wrong, either an `xxxERRORxxx : <error message>` string will be put in the appropriate JSON attribute, or the script will crash. Good luck!
    

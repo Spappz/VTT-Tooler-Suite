@@ -7,16 +7,16 @@
 ########################################################################################>
 
 # BREW SETTINGS
-$source = "MonsterManualExpanded3"
+$source = "SourceNameHere"
     <# JSON source string. Set to "" or $false to instead generate a source string from
         the brew's name. #>
-$abbreviation = "MME3"
+$abbreviation = "ABRV"
     <# Abbreviation string. Set to "" or $false instead generate an abbreviation string
         from the brew's name. #>
-$url = "https://www.dmsguild.com/product/365853/Monster-Manual-Expanded-III-5E"
+$url = "https://www.drivethrurpg.com/product/69420/Duderino's-Guide-to-the-Waves"
     <# Link to one of the brew's official stores or place of publication. Set to "" or
         $false to ignore. #>
-$colour = "BD7044"
+$colour = "95C6F4"
     <# Colour the brew can be identified as on 5etools, as a standard 6-digit RGB hexa-
         decimal code. Set to "" or $false to use the 5etools default. #>
 
@@ -33,10 +33,10 @@ $addImages = $true
         extracted and placed in the same folder. #>
 $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
     <# See above for context. #>
-$bonusActions = $true
+$bonusActions = $false
     <# Set to $true if the brew uses the modern Bonus Actions block and you want to try
         automating that. (Warning: highly experimental.) #>
-$spellcastingActions = $true
+$spellcastingActions = $false
     <# Regardless of how the FG `.mod` displays it, if the brew source treats
     spellcasting as a trait (legacy styling), set to $false. If it treats spellcasting
     as an action (modern styling), set to $true.
@@ -64,6 +64,10 @@ $spellcastingActions = $true
    clean-up!
 
 # LIMITATIONS
+  I have seen a number of `.mod`s that flat-out ignore data fields and inconsistently
+   format things as raw text, which almost undoubtedly produces errors. Nothing I can do
+   here; take it up with the author(s).
+
   You should be aware of the following limitations with this automated conversion.
    - Complex alignments are not handled (e.g. "50% Lawful Good, 50% Chaotic Evil").
    - `prefix` tags (e.g. "Illuskan human").
@@ -184,7 +188,7 @@ $null = New-Item $path -ItemType Directory
 Copy-Item ($sourceFileName + '.mod') $path\_zipzip.zip
 Expand-Archive $path\_zipzip.zip $path
 [xml]$definition = Get-Content $path\definition.xml
-[xml]$db = (Get-Content $path\db.xml -ReadCount 0 -Encoding UTF8) -replace "[‘’]|&#821(6|7);", "'" -replace '[“”]|&#822(0|1);', '"'
+[xml]$db = (Get-Content $path\db.xml -ReadCount 0 -Encoding UTF8) -replace "[‘’]|&#(14|821)(6|7);", "'" -replace '[“”]|&#822(0|1);', '"'
 
 if ($definition.root.ruleset -ne '5E') {
     Read-Host "`n`nno`n`n`n"
@@ -210,7 +214,15 @@ if ($addTokens -or $addImages) {
     } else {
         $imagePath = $source
     }
-    $null = New-Item ($imagePath + "\creature") -ItemType Directory
+    $null = New-Item (
+        $imagePath + "\creature" + $(
+            if ($addTokens) {
+                "\token"
+            } else {
+                $null
+            }
+        )
+    ) -ItemType Directory
     Copy-Item ($path + "\thumbnail.png") ($imagePath + "\cover.png")
 }
 
@@ -259,7 +271,7 @@ function Format-Entries { # haha this sucks
                         break
                     }
                     p {
-                        if ($block[$i].b) { # bold => innermost entries header => 3rd-degree nesting
+                        if ($block[$i].b -or $block[$i].u) { # bold => innermost entries header => 3rd-degree nesting
                             [PSCustomObject]@{ 
                                 type = "entries"
                                 entries = @(
@@ -268,7 +280,7 @@ function Format-Entries { # haha this sucks
                                         entries = @(
                                             [PSCustomObject]@{
                                                 type = "entries"
-                                                name = $block[$i].b -replace '\.? ?$'
+                                                name = $block[$i].b.InnerText -replace '\.? ?$'
                                                 entries = @(Tag-Entries $block[$i].$t)
                                             }
                                         )
@@ -693,7 +705,7 @@ function Enumerate-Conditions {
                 "(?<!against( being)?|or|n['o]t( be)?) (knocked|pushed|shoved|becomes|falls) prone\b" { "prone" }
                 "(?<!against( being| the)?|or|n['o]t( be)?) restrained\b" { "restrained" }
                 "(?<!against( being| the)?|or|n['o]t( be)?) stunned\b" { "stunned" }
-                "(?<!against( being)?|or|n['o]t( be)?) (knocked|pushed|shoved|becomes|falls) unconscious\b" { "unconscious" }
+                "(?<!against( being)?|or|n['o]t( be)?) (knocked|becomes|falls) unconscious\b" { "unconscious" }
             }
         )
     }
@@ -1550,7 +1562,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
 #           if ($spellcastingActions -and $_.name.$t -match '^(innate |shared )?spellcasting( \(.+\))?$') {
 #               $spellcastingFlag = $true
 #           } elseif ($_.desc.$t -cmatch '^As a bonus action, (?<firstletter>\w)') {
-            if ($_.desc.$t -cmatch '^As a bonus action, (?<firstLetter>\w)') {
+            if ($bonusActions -and $_.desc.$t -cmatch '^As a bonus action, (?<firstLetter>\w)') {
                 $null = $monster.bonus.Add(([PSCustomObject]@{
                     name = $_.name.$t -replace '\(recharges? (\d)([-–—−]6)?\)', '{@recharge $1}'
                     entries = @(Tag-Entries ($_.desc.$t -creplace '^As a bonus action, \w', $Matches.firstLetter.ToUpper())) # See comment below
@@ -1759,7 +1771,9 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                         continue
                     }
                     '^cantrips?' {
-                        $spellcastingBuilder.spells | Add-Member -MemberType NoteProperty -Name '0' -Value @(Process-SpellList ($_ -replace '^cantrips?( \((at will|0th[ -]level)\))?: '))
+                        $spellcastingBuilder.spells | Add-Member -MemberType NoteProperty -Name '0' -Value @{
+                            spells = @(Process-SpellList ($_ -replace '^cantrips?( \((at will|0th[ -]level)\))?: '))
+                        }
                         continue
                     }
                     '^(?<lower>\d+)\w{2}[-–—](?<num>\d+)\w{2}[- –—]level \((?<slots>\d+)\b' {
@@ -1919,8 +1933,8 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
         # CONDITIONS INFLICTED BY LAIR ACTIONS/REGIONAL EFFECTS
         $monster | Add-Member -MemberType NoteProperty -Name conditionInflictLegendary -Value ([System.Collections.ArrayList]::new())
         if ($legendaryGroup.lairActions) {
-            $null = $damageTags.AddRange(@(Enumerate-DamageTypes $legendaryGroup.lairActions[1].items -replace '\{@h\}', 'Hit: ' -replace '\{@\w+ (.+?)(\|.+?)?\}', '$1'))
-            $null = $monster.conditionInflictLegendary.AddRange(@(Enumerate-Conditions $legendaryGroup.lairActions[1].items -replace '\{@\w+ (.+?)(\|.+?)?\}', '$1'))
+            $null = $damageTags.AddRange(@(Enumerate-DamageTypes ($legendaryGroup.lairActions[1].items -replace '\{@h\}', 'Hit: ' -replace '\{@\w+ (.+?)(\|.+?)?\}', '$1')))
+            $null = $monster.conditionInflictLegendary.AddRange(@(Enumerate-Conditions ($legendaryGroup.lairActions[1].items -replace '\{@\w+ (.+?)(\|.+?)?\}', '$1')))
         } else {
             $legendaryGroup.PSObject.Properties.Remove('lairActions')
         }
@@ -1968,10 +1982,10 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     }
 
     # TOKEN
-    if ($addTokens -and $_.token.$t -match '\.\w+(?!@DD5E SRD Bestiary)$') {
+    if ($addTokens -and $_.token.$t -match '^(?<path>.+)(?<filetype>\.\w{3,5})(?!@DD5E SRD Bestiary)') {
         try {
-            Copy-Item ($path + "\" + ($_.token.$t -replace '@.*$')) ($imagePath + "\creature\token\" + $monster.name + " (Token)" + ($_.token.$t -replace '^.*(?=\.\w{2,6}$)')) -ErrorAction Stop
-            $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value ("$repo/$source/creature/token/" + $monster.name + " (Token)" + ($_.token.$t -replace '^.*(?=\.\w{2,6}$)'))
+            Copy-Item ($path + "\" + $Matches.path + $Matches.filetype) ($imagePath + "\creature\token\" + $monster.name + " (Token)" + $Matches.filetype) -ErrorAction Stop
+            $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value ("$repo/$source/creature/token/" + $monster.name + " (Token)" + $Matches.filetype)
         } catch {
             $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value "xxxERRORxxx : Could not find image"
             $status += "e"
