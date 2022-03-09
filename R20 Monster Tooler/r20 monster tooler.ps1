@@ -7,7 +7,7 @@
 ########################################################################################>
 
 # SETTINGS
-$source = "ToB2" # JSON source
+$source = "BrewSourceHere" # JSON source
 $token = $true   # Adds tokenUrl (`$repo/$source/creature/token/<name>.png`)
 $fluff = $true   # Extract fluff entries from each monster's 'bio.html'
 $image = $true   # Adds fluff image (`$repo/$source/creature/<name>.webp`)
@@ -21,9 +21,9 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
 
 # HOW TO USE
   Place this file in the same directory as the 'characters' directory, which you should
-   acquire by running R20Exporter. On Windows, right-click this script and select 'Run'.
-   On Mac OS and Linux, you will probably have to install Powershell and run it via
-   command line.
+   acquire by running R20Exporter. On Windows, right-click this script and select 'Run
+   with PowerShell'. On macOS and Linux, you will probably have to install PowerShell and
+   run it via command line.
 
   A file named '# BREW.json' will be created in this same directory. Make corrections as
    appropriate and you should be sorted!
@@ -1231,7 +1231,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     # TOKEN
     Write-Progress -Activity $name -Status "Portraiting..." -PercentComplete 81.25 -Id 1 -ParentId 0
     if ($token) {
-        $5et | Add-Member -NotePropertyName tokenUrl -NotePropertyValue ($repo + "/" + $source + "/creature/token/" + $5et.name + " (Token).png")
+        $5et | Add-Member -NotePropertyName tokenUrl -NotePropertyValue (($repo + "/" + $source + "/creature/token/" + $5et.name + " (Token).png") -replace ' ', '%20' -replace '\(', '%28' -replace '\)', '%29')
     }
 
     # FLUFF + LAIR ACTIONS + REGIONAL EFFECTS
@@ -1434,7 +1434,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
                 type = "image"
                 href = @{
                     type = "external"
-                    url = $repo + "/" + $source + "/creature/" + $5et.name + ".webp"
+                    url = (($repo + "/" + $source + "/creature/" + $5et.name + ".webp") -replace ' ', '%20' -replace '\(', '%28' -replace '\)', '%29')
                 }
             }
         ) }

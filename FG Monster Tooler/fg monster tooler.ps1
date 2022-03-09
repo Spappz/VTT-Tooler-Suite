@@ -280,7 +280,7 @@ function Format-Entries { # haha this sucks
                                         entries = @(
                                             [PSCustomObject]@{
                                                 type = "entries"
-                                                name = $block[$i].b.InnerText -replace '\.? ?$'
+                                                name = $block[$i].b -replace '\.?\s*$'
                                                 entries = @(Tag-Entries $block[$i].$t)
                                             }
                                         )
@@ -1985,7 +1985,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
     if ($addTokens -and $_.token.$t -match '^(?<path>.+)(?<filetype>\.\w{3,5})(?!@DD5E SRD Bestiary)') {
         try {
             Copy-Item ($path + "\" + $Matches.path + $Matches.filetype) ($imagePath + "\creature\token\" + $monster.name + " (Token)" + $Matches.filetype) -ErrorAction Stop
-            $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value ("$repo/$source/creature/token/" + $monster.name + " (Token)" + $Matches.filetype)
+            $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value (("$repo/$source/creature/token/" + $monster.name + " (Token)" + $Matches.filetype) -replace ' ', '%20' -replace '\(', '%28' -replace '\)', '%29')
         } catch {
             $monster | Add-Member -MemberType NoteProperty -Name tokenUrl -Value "xxxERRORxxx : Could not find image"
             $status += "e"
@@ -2010,7 +2010,7 @@ $db.root.npc.$c.ChildNodes | ForEach-Object -Begin {
                         type = "image"
                         href = [PSCustomObject]@{
                             type = "external"
-                            url = "$repo/$source/creature/" + $monster.name + ($db.root.image.$c.$($imageId -replace '^image\.').image.layers.layer.bitmap -replace '^.*(?=\.\w{2,6}$)')
+                            url = (("$repo/$source/creature/" + $monster.name + ($db.root.image.$c.$($imageId -replace '^image\.').image.layers.layer.bitmap -replace '^.*(?=\.\w{2,6}$)'))  -replace ' ', '%20' -replace '\(', '%28' -replace '\)', '%29')
                         }
                     })
                 } catch {
