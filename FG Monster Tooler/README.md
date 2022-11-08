@@ -1,4 +1,4 @@
-# Foundry Spell Tooler
+# FG Monster Tooler
 
 ### About
 This script converts spells from a [Fantasy Grounds](https://www.fantasygrounds.com/home/home.php) (FG) `.mod` file to [5etools' homebrew](https://github.com/TheGiddyLimit/homebrew) schema. This script is designed to automate the *bulk* process, and it will almost certainly require manual correction afterwards (see below).
