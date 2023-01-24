@@ -16,19 +16,21 @@ The following settings can (and should) be set by editing the script. They're fo
 - `$abbreviation` (string) sets the source's display abbreviation; an empty string tells the script to set one itself
 - `$url` (string) sets the link to the homebrew's official store or place of publication; an empty string leaves the property undefined
 - `$colour` (string; standard 6-digit RGB hexadecimal code) sets the source's display colour; an empty string leaves the property undefined
+- `$addFluff` (bool), when `$true`, tells the script to extract the monsters' fluff.
 - `$addTokens` (bool), when `$true`, tells the script to extract the monsters' tokens, place them in a folder in the current directory called `$source`, and set appropriate monsters' tokens to point to `$repo/$source/creature/token/<filename>`
 - `$addImages` (bool), when `$true`, tells the script to extract the monsters' image, place them in a folder in the current directory called `$source`, and set appropriate monsters' images to point to `$repo/$source/creature/<filename>`
 - `$repo` (string) is used to define the token/image repository URL if either of the above two flags are `$true`
-- `$bonusActions` (bool) is an **experimental** setting that, when `$true`, tells the script to try to find bonus actions (which are indistinguishable from actions in the FG data structure) and convert them to match 5etools' `bonus` schema
-- `$spellcastingActions` (bool), when `$true`, tells the script to treat all "Spellcasting" (and related) traits in the `.mod` as actions, following the newer 'spellcasting actions' standard WotC are using
+- `$addLegendary` (bool), when `$true`, tells the script to extract `legendaryGroup` data (i.e. lair actions and regional effects) from the creature's fluff (this may fail catastrophically at times)
+- `$bonusActions` (bool) is an experimental setting that, when `$true` but FG's data lacks a separate field for bonus actions, tells the script to try to find bonus actions and convert them to match 5etools' `bonus` schema
+- `$spellcastingActions` (bool), when `$true`, tells the script to look for "Spellcasting" (and related) actions as well as traits, and to treat them all as actions
 
 ### Limitations
 **Forewarning:** I have seen a number of `.mod`s that flat-out ignore data fields and inconsistently format things as raw text, which almost undoubtedly produces errors. Nothing I can do here; take it up with the author(s).
 
 You should be aware of the following limitations with this automated conversion; there's a lot of edge cases and variation that's hard to foresee.
 - Alignment descriptions that aren't either exact or in the form of "any (non-)**alignment**" (e.g. "50% Lawful Good, 50% Chaotic Evil"). `alignmentPrefix`es that aren't `typically ` will also be missed.
-- `prefix` tags (e.g. "**Illuskan** human").
-- `special` HP maxima, which lack an average or formula.
+- `prefix` tags (e.g. "**Illuskan** human") are not handled.
+- `special` HP maxima, which lack an average or formula, are not handled.
 - Certain complex, conditional ACs may be malformed.
 - Certain complex, non-standard damage vulnerability/resistance/immunity formats
 - Condition immunities with embedded conditions (e.g. "poisoned (while in Angry Form)")
@@ -37,6 +39,7 @@ You should be aware of the following limitations with this automated conversion;
 - Lair actions and regional effects are assumed to follow standard formatting and will not tolerate any real deviation from the norm.
 - Lair actions and regional effects are always formatted in the old bulleted-list style rather than the new `list-hang-notitle` style. Feel free to [raise an issue](https://github.com/Spappz/VTT-Tooler-Suite/issues/new) if this matters for you.
 - Spellcasting actions are messy; see **Settings** above for more information.
+- Bonus actions may appear (with slightly modified text) as normal actions; see above for more information.
 
 If something goes wrong, either an `xxxERRORxxx : <error message>` string will be put in the appropriate JSON attribute, or the script will crash. Good luck!
 
@@ -55,7 +58,5 @@ Although this script tries to automatically match taggable strings, it is far fr
 
 If something goes wrong, either an `xxxERRORxxx : <error message>` string will be put in the appropriate JSON attribute, or the script will crash. Good luck!
    
-Last tested under Foundry VTT [`dnd5e` system](https://gitlab.com/foundrynet/dnd5e) version 1.5.3. Support outside this version is not guaranteed.
-
 ### Longevity
 Please [create an issue](https://github.com/Spappz/VTT-Tooler-Suite/issues/new) if you'd like some extra work on this: bugs to fix, changes to FG's schema, features to develop, etc.
