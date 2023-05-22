@@ -1549,7 +1549,6 @@ foreach ($characterName in (Get-ChildItem -Path .\characters\)) {
 
     # TAG CLEANUP
     Write-Progress -Activity $name -Status "Cleaning..." -PercentComplete 93.75 -Id 1 -ParentId 0
-	 Clean-Up-Tags $5et "trait"
     Clean-Up-Tags $5et "senseTags"
     Clean-Up-Tags $5et "damageTags"
     Clean-Up-Tags $5et "conditionInflict"
