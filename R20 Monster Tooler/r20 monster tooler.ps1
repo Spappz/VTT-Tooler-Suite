@@ -7,7 +7,7 @@
 ########################################################################################>
 
 # SETTINGS
-$source = "BrewSourceHere" # JSON source
+$source = "brewsource" # JSON source
 $token = $true   # Adds tokenUrl (`$repo/$source/creature/token/<name>.png`)
 $fluff = $true   # Extract fluff entries from each monster's 'bio.html'
 $image = $true   # Adds fluff image (`$repo/$source/creature/<name>.webp`)
@@ -18,6 +18,9 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
   This script converts monsters from KaKaRoTo's R20Exporter JSON to 5etools' homebrew
    schema. This script is designed to automate the *bulk* process, and it will almost
    certainly require manual correction afterwards (see below).
+	
+  Note: this script requires PowerShell 6 or higher. Windows 10 only has PowerShell 5
+	installed by default.
 
 # HOW TO USE
   Place this file in the same directory as the 'characters' directory, which you should
@@ -71,14 +74,14 @@ $repo = "https://raw.githubusercontent.com/TheGiddyLimit/homebrew/master/_img"
 
 # CONTACT
   - spap [has#] 9812
-  - spappz [@t] fire mail [d.t] cc
+  - spappz [@t] fire mail [dâ€¢t] cc
 
   pls no spam
 
 # LICENSE
   MIT License
 
-  Copyright © 2020 Spappz
+  Copyright Â© 2020 Spappz
 
   Permission is hereby granted, free of charge, to any person obtaining a copy of this
    software and associated documentation files (the "Software"), to deal in the Software
@@ -243,13 +246,13 @@ function Find-Damage-Types {
     }
     PROCESS {
         switch -regex ($str) {
-            "\btak\w{1,3} [d \d\+\-\*×÷/\^\(\)]+? \w{4,} damage\b" { $finds += $str -replace '^.+\btak\w{1,3} [d \d\+\-\*×÷/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
-            '\bdeal\w{0,3} [d \d\+\-\*×÷/\^\(\)]+? \w{4,} damage\b' { $finds += $str -replace '^.+\bdeal\w{0,3} [d \d\+\-\*×÷/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
-            '\binflict\w{0,3} [d \d\+\-\*×÷/\^\(\)]+? \w{4,} damage\b' { $finds += $str -replace '^.+\binflict\w{0,3} [d \d\+\-\*×÷/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
-            '\bsuffer\w{0,3} [d \d\+\-\*×÷/\^\(\)]+? \w{4,} damage\b' { $_;$finds += $str -replace '^.+\bsuffer\w{0,3} [d \d\+\-\*×÷/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
-            '\bfor [d \d\+\-\*×÷/\^\(\)]+? \w{4,} damage\b' { $finds += $str -replace '^.+\bfor [d \d\+\-\*×÷/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
-            '\bplus [d \d\+\-\*×÷/\^\(\)]+? \w{4,} damage\b' { $finds += $str -replace '^.+\bplus [d \d\+\-\*×÷/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
-            '\band [d \d\+\-\*×÷/\^\(\)]+? \w{4,} damage\b' { $finds += $str -replace '^.+\band [d \d\+\-\*×÷/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
+            "\btak\w{1,3} [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)]+? \w{4,} damage\b" { $finds += $str -replace '^.+\btak\w{1,3} [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
+            '\bdeal\w{0,3} [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)]+? \w{4,} damage\b' { $finds += $str -replace '^.+\bdeal\w{0,3} [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
+            '\binflict\w{0,3} [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)]+? \w{4,} damage\b' { $finds += $str -replace '^.+\binflict\w{0,3} [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
+            '\bsuffer\w{0,3} [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)]+? \w{4,} damage\b' { $_;$finds += $str -replace '^.+\bsuffer\w{0,3} [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
+            '\bfor [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)]+? \w{4,} damage\b' { $finds += $str -replace '^.+\bfor [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
+            '\bplus [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)]+? \w{4,} damage\b' { $finds += $str -replace '^.+\bplus [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
+            '\band [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)]+? \w{4,} damage\b' { $finds += $str -replace '^.+\band [d \d\+\-âˆ’â€“Ã—x\*Ã·/\^\(\)\{@\}]+ (\w{4,}) damage\b.*$', '$1' }
             '\bor \w{4,} damage' { $finds += $str -replace "^.+\bor (\w{4,}) damage.*$", '$1' }
         }
         switch -exact ($finds) {
@@ -279,10 +282,17 @@ function Tag-Entries {
     PROCESS {
         Write-Output ($str `
             -replace '^\s+' -replace '\s+$' `
-            -replace '(?<=\()([\dd \+\-×x\*÷\/\*]+\d)(?=\))', '{@damage $1}' `
-            -replace '\b(\d+d[\dd \+\-×x\*÷\/]*\d)(?= (\w){4,9} damage\b)(?!\})', '{@damage $1}' `
+				-replace '\[\[(\d+)d(\d+)( ?(\+|[--â€“]) ?(\d*))?\]\]', {
+					[Math]::floor(
+						([int][string]$_.Groups[1]) * ([int][string]$_.Groups[2] + 1) / 2 + (
+							([string]$_.Groups[4] -eq '+' ? 1 : -1) * ([int][string]$_.Groups[5])
+						)
+					)
+				} `
+            -replace '(?<=\()([\dd \+\-âˆ’â€“Ã—x\*Ã·/]+\d)(?=\))', '{@damage $1}' `
+            -replace '\b(\d+d[\dd \+\-âˆ’â€“Ã—x\*Ã·/]*\d)(?= (\w){4,9} damage\b)(?!\})', '{@damage $1}' `
             -replace '(?<=\brolls? a )(d\d+)\b(?!\})', '{@dice $1}' `
-            -replace '(?<!@d(amage|ice)) (\d+d[\dd \+\-×x\*÷/]*\d)\b(?!\})', ' {@dice $2}' `
+            -replace '(?<!@d(amage|ice)) (\d+d[\dd \+\-âˆ’â€“Ã—x\*Ã·/]*\d)\b(?!\})', ' {@dice $2}' `
             -creplace '\bDC ?(\d+)\b', '{@dc $1}' `
             -creplace '(?<!\w)\+?(\-?\d)(?= (to hit|modifier))', '{@hit $1}' `
             -replace "(?<=\b(be(comes?)?|is|while|a(lso|nd)?|or|the) )(blinded|charmed|deafened|frightened|grappled|incapacitated|invisible|paralyzed|petrified|poisoned|restrained|stunned)\b", '{@condition $4}' `
@@ -308,9 +318,7 @@ function Tag-Action-Name {
         [string]$str
     )
     PROCESS {
-        Write-Output ($str `
-            -replace '\(recharge (\d)(\-6)?\)', '{@recharge $1}'
-        )
+        Write-Output ($str -replace '\(recharge (\d)([â€“\-]6)?\)', '{@recharge $1}')
     }
 }
 function Find-Conditions {
@@ -361,15 +369,15 @@ function Clean-Up-Tags {
 
 # TODO Multithreading?
 
-Get-ChildItem -Path .\characters\ | ForEach-Object {
+foreach ($characterName in (Get-ChildItem -Path .\characters\)) {
     $err = $false
     Write-Progress -Activity "Converting characters..." -Status "Progress:" -PercentComplete ($progress/$progmax*100) -Id 0
-    Write-Progress -Activity "$($_.name -replace '\d+ - ')" -PercentComplete 0 -Id 1 -ParentId 0
+    Write-Progress -Activity "$($characterName.name -replace '\d+ - ')" -PercentComplete 0 -Id 1 -ParentId 0
     $5et = [PSCustomObject]@{}
-    $r20 = (Get-Content -Path ".\characters\$($_.name)\character.json" -Encoding "UTF8") -replace "(‘|’)", "'" | ConvertFrom-Json
+    $r20 = (Get-Content -Path ".\characters\$($characterName.name)\character.json" -Encoding "UTF8") -replace '[â€˜â€™]', "'" -replace '[â€œâ€]', '\"' | ConvertFrom-Json
 
     # REFERENCE DATA
-    Write-Progress -Activity "$($_.name -replace '\d+ - ')" -Status "Naming..." -PercentComplete 3.125 -Id 1 -ParentId 0
+    Write-Progress -Activity "$($characterName.name -replace '\d+ - ')" -Status "Naming..." -PercentComplete 3.125 -Id 1 -ParentId 0
     $name = $r20.attributes | where { $_.name -eq "npc_name"} | Select -ExpandProperty current
     if ($name -eq $null) {
         $name = $r20.name
@@ -399,15 +407,15 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     # SIZE
     Write-Progress -Activity $name -Status "Weighing..." -PercentComplete 6.25 -Id 1 -ParentId 0
     $creaturetagline = $r20.attributes | where { $_.name -eq "npc_type" } | Select -ExpandProperty current
-    switch -exact ($creaturetagline -replace '^([\w]+) [\w, \-\(\)]*$', '$1') {
-        "tiny" { $5et | Add-Member -NotePropertyName size -NotePropertyValue "T" }
-        "small" { $5et | Add-Member -NotePropertyName size -NotePropertyValue "S" }
-        "medium" { $5et | Add-Member -NotePropertyName size -NotePropertyValue "M" }
-        "large" { $5et | Add-Member -NotePropertyName size -NotePropertyValue "L" }
-        "huge" { $5et | Add-Member -NotePropertyName size -NotePropertyValue "H" }
-        "gargantuan" { $5et | Add-Member -NotePropertyName size -NotePropertyValue "G" }
+    switch -exact ($creaturetagline -replace '^([\w]+) .*$', '$1') {
+        "tiny" { $5et | Add-Member -NotePropertyName size -NotePropertyValue @("T") }
+        "small" { $5et | Add-Member -NotePropertyName size -NotePropertyValue @("S") }
+        "medium" { $5et | Add-Member -NotePropertyName size -NotePropertyValue @("M") }
+        "large" { $5et | Add-Member -NotePropertyName size -NotePropertyValue @("L") }
+        "huge" { $5et | Add-Member -NotePropertyName size -NotePropertyValue @("H") }
+        "gargantuan" { $5et | Add-Member -NotePropertyName size -NotePropertyValue @("G") }
         default {
-            $5et | Add-Member -NotePropertyName size -NotePropertyValue "XxX_ERROR_XxX : Unknown size ///"
+            $5et | Add-Member -NotePropertyName size -NotePropertyValue @("XxX_ERROR_XxX : Unknown size ///")
             $err = $true
         }
     }
@@ -416,8 +424,8 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     Write-Progress -Activity $name -Status "Classifying..." -PercentComplete 9.375 -Id 1 -ParentId 0
     if ($creaturetagline -match '\(') {
         $5et | Add-Member -NotePropertyName type -NotePropertyValue @{
-            type = $creaturetagline -replace '^[\w]+ ([\w \-]+) \([\w ,\-\)]+$', '$1'
-            tags = @($creaturetagline -replace '^[\w ,\-]+\(([\w ,\-]+)\)[\w ,\-]+$', '$1' -split ", ")
+            type = $creaturetagline -replace '^[\w]+ ([\w \-]+) \(.+$', '$1'
+            tags = @($creaturetagline -replace '^[\w ,\-]+\(([\w ,\-]+)\).+$', '$1' -split ", ")
         }
     } elseif ($creaturetagline -match 'swarm of') {
         switch -exact ($creaturetagline -replace '^[\w]+ swarm of ([\w]+) ([\w \-]+)[\w ,\-]*$', '$1') {
@@ -449,7 +457,12 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
 
     # ALIGNMENT
     Write-Progress -Activity $name -Status "Aligning..." -PercentComplete 12.5 -Id 1 -ParentId 0
-    switch -regex ($creaturetagline -replace '^[\w ,\-\(\)]+, ([\w \-]+)$', '$1') {
+	 $alignmentstring = $creaturetagline -replace '^[\w ,\-\(\)]+, (.+)$', '$1'
+	 if ($alignmentstring -match '^typically ') {
+		 $5et | Add-Member -NotePropertyName alignmentPrefix -NotePropertyValue "typically "
+		 $alignmentstring = $alignmentstring -replace '^typically '
+	 }
+    switch -regex ($alignmentstring) {
         "^unaligned$" { $5et | Add-Member -NotePropertyName alignment -NotePropertyValue @("U") }
         "^neutral$" { $5et | Add-Member -NotePropertyName alignment -NotePropertyValue @("N") }
         "^any( alignment)?$" { $5et | Add-Member -NotePropertyName alignment -NotePropertyValue @("A") }
@@ -484,14 +497,14 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     Write-Progress -Activity $name -Status "Armouring..." -PercentComplete 15.625 -Id 1 -ParentId 0
     if (($r20.attributes | where { $_.name -eq "npc_actype" } | Select -ExpandProperty current) -eq "") {
         $5et | Add-Member -NotePropertyName ac -NotePropertyValue @([int]($r20.attributes | where { $_.name -eq "npc_ac" } | Select -ExpandProperty current))
-    } elseif (($r20.attributes | where { $_.name -eq "npc_actype" } | Select -ExpandProperty current) -match '^[a-zA-Z ,\-]+$') {
+    } elseif (($r20.attributes | where { $_.name -eq "npc_actype" } | Select -ExpandProperty current) -match '^(\+\d )?[a-zA-Z ,\-]+$') {
         $5et | Add-Member -NotePropertyName ac -NotePropertyValue @( @{
             ac = [int]($r20.attributes | where { $_.name -eq "npc_ac" } | Select -ExpandProperty current)
             from = ($r20.attributes | where { $_.name -eq "npc_actype" } | Select -ExpandProperty current) -split ", "
         })
     } elseif (($r20.attributes | where { $_.name -eq "npc_actype" } | Select -ExpandProperty current) -match '^\d+ with .+$') {
         $5et | Add-Member -NotePropertyName ac -NotePropertyValue @(
-            ($r20.attributes | where { $_.name -eq "npc_ac" } | Select -ExpandProperty current),
+            [int]($r20.attributes | where { $_.name -eq "npc_ac" } | Select -ExpandProperty current),
             [ordered]@{
                 ac = [int](($r20.attributes | where { $_.name -eq "npc_actype" } | Select -ExpandProperty current) -replace '^([\d]+) with .+$', '$1')
                 condition = ($r20.attributes | where { $_.name -eq "npc_actype" } | Select -ExpandProperty current) -replace '^[\d]+ (with .+)$', '$1'
@@ -506,7 +519,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     # HP
     Write-Progress -Activity $name -Status "Healing..." -PercentComplete 18.75 -Id 1 -ParentId 0
     $5et | Add-Member -NotePropertyName hp -NotePropertyValue @{
-        average = $r20.attributes | where { $_.name -eq "hp"} | Select -ExpandProperty max
+        average = [int]($r20.attributes | where { $_.name -eq "hp"} | Select -ExpandProperty max)
         formula = $r20.attributes | where { $_.name -eq "npc_hpformula"} | Select -ExpandProperty current
     }
 
@@ -569,12 +582,12 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
 
     # ABILITY SCORES
     Write-Progress -Activity $name -Status "Scoring..." -PercentComplete 25 -Id 1 -ParentId 0
-    $5et | Add-Member -NotePropertyName str -NotePropertyValue [int]($r20.attributes | where { $_.name -eq "strength_base"} | Select -ExpandProperty current)
-    $5et | Add-Member -NotePropertyName dex -NotePropertyValue [int]($r20.attributes | where { $_.name -eq "dexterity_base"} | Select -ExpandProperty current)
-    $5et | Add-Member -NotePropertyName con -NotePropertyValue [int]($r20.attributes | where { $_.name -eq "constitution_base"} | Select -ExpandProperty current)
-    $5et | Add-Member -NotePropertyName int -NotePropertyValue [int]($r20.attributes | where { $_.name -eq "intelligence_base"} | Select -ExpandProperty current)
-    $5et | Add-Member -NotePropertyName wis -NotePropertyValue [int]($r20.attributes | where { $_.name -eq "wisdom_base"} | Select -ExpandProperty current)
-    $5et | Add-Member -NotePropertyName cha -NotePropertyValue [int]($r20.attributes | where { $_.name -eq "charisma_base"} | Select -ExpandProperty current)
+    $5et | Add-Member -NotePropertyName str -NotePropertyValue ([int]($r20.attributes | where { $_.name -eq "strength_base"} | Select -ExpandProperty current))
+    $5et | Add-Member -NotePropertyName dex -NotePropertyValue ([int]($r20.attributes | where { $_.name -eq "dexterity_base"} | Select -ExpandProperty current))
+    $5et | Add-Member -NotePropertyName con -NotePropertyValue ([int]($r20.attributes | where { $_.name -eq "constitution_base"} | Select -ExpandProperty current))
+    $5et | Add-Member -NotePropertyName int -NotePropertyValue ([int]($r20.attributes | where { $_.name -eq "intelligence_base"} | Select -ExpandProperty current))
+    $5et | Add-Member -NotePropertyName wis -NotePropertyValue ([int]($r20.attributes | where { $_.name -eq "wisdom_base"} | Select -ExpandProperty current))
+    $5et | Add-Member -NotePropertyName cha -NotePropertyValue ([int]($r20.attributes | where { $_.name -eq "charisma_base"} | Select -ExpandProperty current))
 
     # SAVES
     Write-Progress -Activity $name -Status "Saving..." -PercentComplete 28.125 -Id 1 -ParentId 0
@@ -716,10 +729,10 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
         [System.Collections.ArrayList]$vulns = ($r20.attributes | where { $_.name -eq "npc_vulnerabilities" } | Select -ExpandProperty current ) -split "; "
         if ($vulns.Count -eq 1) {
             $vulns = $vulns -replace ", and ", ", " -replace " and ", ", " -split ", "
-            if ($vulns -match ' from ') {
+            if ($vulns -match ' (from|that is) ') {
                 $vulncond = [PSCustomObject]@{}
                 [System.Collections.ArrayList]$vulnX = $vulns -replace ", and ", ", " -replace " and ", ", " -split ", "
-                $vulnX += $vulnX[-1] -replace "\w+ from ([.]*)", "from $1"
+                $vulnX += $vulnX[-1] -replace "\w+ (from|that is) ([.]*)", '$1 $2'
                 $vulnX[-2] = $vulnX[-2] -replace $vulnX[-1] -replace " "
                 $vulncond | Add-Member -NotePropertyName note -NotePropertyValue $vulnX[-1]
                 $vulnX.RemoveAt($vulnX.Count - 1)
@@ -732,7 +745,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
         } elseif ($vulns.Count -eq 2) {
             $vulncond = [PSCustomObject]@{}
             [System.Collections.ArrayList]$vulnX = $vulns[-1] -replace ", and ", ", " -replace " and ", ", " -split ", "
-            $vulnX += $vulnX[-1] -replace "\w+ from ([.]*)", "from $1"
+            $vulnX += $vulnX[-1] -replace "\w+ (from|that is) ([.]*)", '$1 $2'
             $vulnX[-2] = $vulnX[-2] -replace $vulnX[-1] -replace " "
             $vulncond | Add-Member -NotePropertyName note -NotePropertyValue $vulnX[-1]
             $vulnX.RemoveAt($vulnX.Count - 1)
@@ -752,10 +765,10 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
         [System.Collections.ArrayList]$resists = ($r20.attributes | where { $_.name -eq "npc_resistances" } | Select -ExpandProperty current ) -split "; "
         if ($resists.Count -eq 1) {
             $resists = $resists -replace ", and ", ", " -replace " and ", ", " -split ", "
-            if ($resists -match ' from ') {
+            if ($resists -match ' (from|that is) ') {
                 $resistscond = [PSCustomObject]@{}
                 [System.Collections.ArrayList]$resistsX = $resists -replace ", and ", ", " -replace " and ", ", " -split ", " -replace '^\s+' -replace '\s+$'
-                $resistsX += $resistsX[-1] -replace "\w+ from ([.]*)", "from $1"
+                $resistsX += $resistsX[-1] -replace "\w+ (from|that is) ([.]*)", '$1 $2'
                 $resistsX[-2] = $resistsX[-2] -replace $resistsX[-1] -replace " "
                 $resistscond | Add-Member -NotePropertyName note -NotePropertyValue $resistsX[-1]
                 $resistsX.RemoveAt($resistsX.Count - 1)
@@ -768,7 +781,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
         } elseif ($resists.Count -eq 2) {
             $resistscond = [PSCustomObject]@{}
             [System.Collections.ArrayList]$resistsX = $resists[-1] -replace ", and ", ", " -replace " and ", ", " -split ", " -replace '^\s+' -replace '\s+$'
-            $resistsX += $resistsX[-1] -replace "\w+ from ([.]*)", "from $1"
+            $resistsX += $resistsX[-1] -replace "\w+ (from|that is) ([.]*)", '$1 $2'
             $resistsX[-2] = $resistsX[-2] -replace $resistsX[-1] -replace " "
             $resistscond | Add-Member -NotePropertyName note -NotePropertyValue $resistsX[-1]
             $resistsX.RemoveAt($resistsX.Count - 1)
@@ -788,10 +801,10 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
         [System.Collections.ArrayList]$immunes = ($r20.attributes | where { $_.name -eq "npc_immunities" } | Select -ExpandProperty current ) -split "; "
         if ($immunes.Count -eq 1) {
             $immunes = $immunes -replace ", and ", ", " -replace " and ", ", " -split ", "
-            if ($immunes -match ' from ') {
+            if ($immunes -match ' (from|that is) ') {
                 $immunescond = [PSCustomObject]@{}
                 [System.Collections.ArrayList]$immunesX = $immunes -replace ", and ", ", " -replace " and ", ", " -split ", " -replace '^\s+' -replace '\s+$'
-                $immunesX += $immunesX[-1] -replace "\w+ from ([.]*)", "from $1"
+                $immunesX += $immunesX[-1] -replace "\w+ (from|that is) ([.]*)", '$1 $2'
                 $immunesX[-2] = $immunesX[-2] -replace $immunesX[-1] -replace " "
                 $immunescond | Add-Member -NotePropertyName note -NotePropertyValue $immunesX[-1]
                 $immunesX.RemoveAt($immunesX.Count - 1)
@@ -804,7 +817,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
         } elseif ($immunes.Count -eq 2) {
             $immunescond = [PSCustomObject]@{}
             [System.Collections.ArrayList]$immunesX = $immunes[-1] -replace ", and ", ", " -replace " and ", ", " -split ", " -replace '^\s+' -replace '\s+$'
-            $immunesX += $immunesX[-1] -replace "\w+ from ([.]*)", "from $1"
+            $immunesX += $immunesX[-1] -replace "\w+ (from|that is) ([.]*)", '$1 $2'
             $immunesX[-2] = $immunesX[-2] -replace $immunesX[-1] -replace " "
             $immunescond | Add-Member -NotePropertyName note -NotePropertyValue $immunesX[-1]
             $immunesX.RemoveAt($immunesX.Count - 1)
@@ -886,9 +899,6 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
         # CONDITION INFLICT TAGS
         $5et.conditionInflict += $atk | Find-Conditions
         ###
-    }
-    if ($5et.trait.Count -eq 0) {
-        $5et.PSObject.Properties.Remove('trait')
     }
 
     # TRAIT TAGS
@@ -973,7 +983,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
                     name = $block
                     ability = ($spelldesc[0] -creplace '^.+(Intelligence|Wisdom|Charisma|Constitution|Strength|Dexterity).+$', '$1' -replace '^(...).+$', '$1').ToLower()
                     headerEntries = @($spelldesc[0] -replace '^\s+' -replace '\s+$')
-                    footerEntries = "XxX_ERROR_XxX : Special spell list ///"
+                    footerEntries = @("XxX_ERROR_XxX : Special spell list ///")
                 }
                 $err = $true
             } else {
@@ -1137,6 +1147,109 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
     if ($5et.action.Count -eq 0) {
         $5et.PSObject.Properties.Remove('action')
     }
+	 
+	 
+    $5et | Add-Member -NotePropertyName bonus -NotePropertyValue @()
+    foreach ($id in (($r20.attributes | where { $_.name -match '^repeating_npcbonusaction_-[\w_\-]+_name$' } | Select -ExpandProperty name) -replace '^repeating_npcbonusaction_-([\w_\-]+)_name', '$1')) {
+        if ($r20.attributes | where { $_.name -eq "repeating_npcaction_-${id}_attack_flag" }) {
+            switch -regex ($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_name" } | Select -ExpandProperty current) {
+                '^.+ \(Ranged\)$' {
+                    $atk = "XxX_ERROR_XxX : Ranged duplicate ///"
+                    $err = $true
+                }
+					 '^.+ \(two\-handed\)$' {
+                    $atk = "XxX_ERROR_XxX : Versatile duplicate ///"
+                    $err = $true
+                }
+                '^.+ \(swarm has .*less.*\)$' {
+                    $atk = "XxX_ERROR_XxX : Swarm HP-dependent duplicate ///"
+                    $err = $true
+                }
+                default {
+                    switch ($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_attack_type" } | Select -ExpandProperty current) {
+                        "Melee" { $atk = '{@atk mw}' }
+                        "Ranged" { $atk = '{@atk rw}' }
+                        default {
+                            $atk = 'XxX_ERROR_XxX : Unknown attack type ///'
+                            $err = $true
+                        }
+                    }
+                    # TODO Check whteher rider effects are consistent in R20 vs book
+                    $atk += " {@hit " + (($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_attack_tohitrange" } | Select -ExpandProperty current) -replace '^([\d\+\-]+)(, .+)?$', '$1') + "} to hit"
+                    $atk += (($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_attack_tohitrange" } | Select -ExpandProperty current) -replace '^([\d\+\-]+)(.*)$', '$2' -creplace '\bR(?=(each|ange)\b)', 'r') + "."
+                    if ($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_attack_onhit" } | Select -ExpandProperty current) {
+                        $atk += " {@h}" + ($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_attack_onhit" } | Select -ExpandProperty current)
+                        if (($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_description" } | Select -ExpandProperty current) -match "^(A|If)\b") {
+                            $atk += ". " + ($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_description" } | Select -ExpandProperty current)
+                        } elseif ($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_description" } | Select -ExpandProperty current) {
+                            $atk += ", and " + (($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_description" } | Select -ExpandProperty current) -creplace "^T", "t")
+                        } else {
+                            $atk += "."
+                        }
+                    } else {
+                        if ($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_description" } | Select -ExpandProperty current) {
+                            $atk += " {@h}" + ($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_description" } | Select -ExpandProperty current)
+                        } else {
+                            $atk += "XxX_ERROR_XxX : Missing attack effects ///"
+                        }
+                    }
+                }
+            }
+            $atk = $atk | Tag-Entries
+            $5et.bonus += @( [ordered]@{
+                name =  $r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_name" } | Select-Object -ExpandProperty current | Tag-Action-Name
+                entries = $atk -split ' ?\n' -replace '^\s+' -replace '\s+$'
+            } )
+            # DAMAGE TAGS
+            switch -exact ($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_attack_damagetype" } | Select -ExpandProperty current) {
+                bludgeoning { $5et.damageTags += "B" }
+                piercing { $5et.damageTags += "P" }
+                slashing { $5et.damageTags += "S" }
+                acid { $5et.damageTags += "A" }
+                cold { $5et.damageTags += "C" }
+                fire { $5et.damageTags += "F" }
+                force { $5et.damageTags += "O" }
+                lightning { $5et.damageTags += "L" }
+                necrotic { $5et.damageTags += "N" }
+                poison { $5et.damageTags += "I" }
+                psychic { $5et.damageTags += "Y" }
+                radiant { $5et.damageTags += "R" }
+                thunder { $5et.damageTags += "T" }
+            }
+            switch -exact ($r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_attack_damagetype2" } | Select -ExpandProperty current) {
+                bludgeoning { $5et.damageTags += "B" }
+                piercing { $5et.damageTags += "P" }
+                slashing { $5et.damageTags += "S" }
+                acid { $5et.damageTags += "A" }
+                cold { $5et.damageTags += "C" }
+                fire { $5et.damageTags += "F" }
+                force { $5et.damageTags += "O" }
+                lightning { $5et.damageTags += "L" }
+                necrotic { $5et.damageTags += "N" }
+                poison { $5et.damageTags += "I" }
+                psychic { $5et.damageTags += "Y" }
+                radiant { $5et.damageTags += "R" }
+                thunder { $5et.damageTags += "T" }
+            }
+            # CONDITION INFLICT TAGS
+            $5et.conditionInflict += $atk | Find-Conditions
+            ###
+        } else {
+            $atk = @( $r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_description" } | Select -ExpandProperty current | Tag-Entries ) -split ' ?\n'
+            $5et.bonus += @( [ordered]@{
+                name = $r20.attributes | where { $_.name -eq "repeating_npcbonusaction_-${id}_name" } | Select -ExpandProperty current | Tag-Action-Name
+                entries = $atk -replace '^\s+' -replace '\s+$'
+            } )
+            # DAMAGE TAGS
+            $5et.damageTags += $atk | Find-Damage-Types
+            # CONDITION INFLICT TAGS
+            $5et.conditionInflict += $atk | Find-Conditions
+            ###
+        }
+    }
+    if ($5et.bonus.Count -eq 0) {
+        $5et.PSObject.Properties.Remove('bonus')
+    }
 
     # REACTIONS
     Write-Progress -Activity $name -Status "Reacting..." -PercentComplete 68.75 -Id 1 -ParentId 0
@@ -1242,7 +1355,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
         $5et | Add-Member -NotePropertyName fluff -NotePropertyValue @{}
     }
     if ($fluff) {
-        $bio = (($bio[0] -replace '</?p>' -replace '\t' -replace '<br>') | Tag-Entries) -split ' ?\n' 
+        $bio = (($bio[0] -replace '</?p>' -replace '\t' -replace '<br>' -replace '<img src="[^">]*" ?/?>' -replace '</?span>') | Tag-Entries) -split ' ?\n'
         for ($i = 0; $i -lt $bio.Count; $i++) {
             if ($bio[$i] -match "^\s*$") { # Remove empty lines
                 $bio.RemoveAt($i)
@@ -1280,13 +1393,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
                 }
             }
         }
-        $5et.fluff += @{ entries = @( [ordered]@{
-            type = "entries"
-            entries = @( [ordered]@{
-                type = "entries"
-                entries = $bio
-            } )
-        } ) }
+        $5et.fluff += @{ entries = $bio }
     }
     Write-Progress -Activity $name -Status "Haunting..." -PercentComplete 87.5 -Id 1 -ParentId 0
     if ($LARE) {
@@ -1442,6 +1549,7 @@ Get-ChildItem -Path .\characters\ | ForEach-Object {
 
     # TAG CLEANUP
     Write-Progress -Activity $name -Status "Cleaning..." -PercentComplete 93.75 -Id 1 -ParentId 0
+	 Clean-Up-Tags $5et "trait"
     Clean-Up-Tags $5et "senseTags"
     Clean-Up-Tags $5et "damageTags"
     Clean-Up-Tags $5et "conditionInflict"
@@ -1485,9 +1593,7 @@ if ($brew.legendaryGroup.Count -eq 0) {
     $brew.Remove("legendaryGroup")
 }
 
-(($brew | ConvertTo-Json -Depth 15 -Compress | ForEach-Object {
-    [Regex]::Replace($_, "\\u(?<Value>\w{4})", { param($matches) ([char]([int]::Parse($matches.Groups['Value'].Value, [System.Globalization.NumberStyles]::HexNumber))).ToString() })
-}) -replace '(“|”)', '\"' -replace '—', '\u2014' -replace '–', '\u2013') | Out-File -FilePath ".\# BREW.json" -Encoding UTF8
+$brew | ConvertTo-Json -Depth 30 | Out-File -FilePath ".\# BREW.json" -Encoding UTF8
 
 Write-Output "`nConversion complete.`n"
 if ($errcount) {
