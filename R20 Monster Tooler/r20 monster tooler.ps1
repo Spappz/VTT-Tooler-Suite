@@ -926,7 +926,7 @@ foreach ($characterName in (Get-ChildItem -Path .\characters\)) {
         "^legendary resistance\b" { $5et.traitTags += "Legendary Resistances" }
         "^light sensitivity\b" { $5et.traitTags += "Light Sensitivity" }
         "^magic resistance\b" { $5et.traitTags += "Magic Resistance" }
-        "^magic weapon\b" { $5et.traitTags += "Magic Weapons" }
+        "^magic weapons?\b" { $5et.traitTags += "Magic Weapons" }
         "^pack tactics\b" { $5et.traitTags += "Pack Tactics" }
         "^pounce\b" { $5et.traitTags += "Pounce" }
         "^rampage\b" { $5et.traitTags += "Rampage" }
