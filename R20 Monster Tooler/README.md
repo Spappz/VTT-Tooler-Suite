@@ -51,4 +51,4 @@ Also this handles lists and tables terribly. If you see random italics or `<li>`
 
 This script sits in a precarious position for two reasons. Firstly, in the simplest of terms, I hate Roll20's schema. Secondly—and definitely unrelatedly!—this was my first script, written while I was still learning PowerShell. As such, it has quite a few messy idiosyncracies, even if the overall script is perfectly functional.
 
-Please only [create issues](https://github.com/user/repository/issues/new) for this tooler if you encounter a script-breaking bug; I presently have no intention to improve, develop, or refactor it otherwise. (You're welcome to try to convince me otherwise. 😏)
+Please only [create issues](https://github.com/Spappz/VTT-Tooler-Suite/issues/new) for this tooler if you encounter a script-breaking bug; I presently have no intention to improve, develop, or refactor it otherwise. (You're welcome to try to convince me otherwise. 😏)
