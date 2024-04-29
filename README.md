@@ -8,4 +8,4 @@ All scripts are functional for Powershell versions 5.1 (default version installe
 
 ## ⚠️ Maintenance mode
 
-I no longer have interest in developing this project. I'll endeavour to fix small bugs in the existing converters as Foundry changes and (most importantly!) [issues are raised](https://github.com/user/repository/issues/new), but, besides outside contribution (pull requests welcome), I won't be fiddling with this any more.
+I no longer have interest in developing this project. I'll endeavour to fix small bugs in the existing converters as Foundry changes and (most importantly!) [issues are raised](https://github.com/Spappz/VTT-Tooler-Suite/issues/new), but, besides outside contribution (pull requests welcome), I won't be fiddling with this any more.
